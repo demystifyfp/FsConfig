@@ -1,10 +1,21 @@
 module FsConfig.Tests
 
-open FsConfig
 open NUnit.Framework
+open EnvConfig
 
 [<Test>]
-let ``hello returns 42`` () =
-  let result = Library.hello 42
-  printfn "%i" result
-  Assert.AreEqual(42,result)
+let ``parsePrimitive not found use case`` () =
+  let result = parsePrimitive<int> "NOT_EXIST"
+  let expected : EnvVarParseResult<int> = NotFound "NOT_EXIST" |> Error
+  Assert.AreEqual(expected,result)
+
+type SampleConfig = {
+  ProcessId : int
+  ProcessName : string
+}
+
+[<Test>]
+let ``parseRecord not found use case`` () =
+  let result = parseRecord<SampleConfig>()
+  printfn "%A" result
+  Assert.IsNotNull(result)

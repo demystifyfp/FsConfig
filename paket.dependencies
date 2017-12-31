@@ -9,6 +9,7 @@ source https://nuget.org/api/v2
 #     nuget FSharp.Core ~> 4.1.0 redirects: force
 
 nuget FSharp.Core ~> 4.1.0 redirects: force
+nuget TypeShape
 
 group Build
   source https://nuget.org/api/v2
