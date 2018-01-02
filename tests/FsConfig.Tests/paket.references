@@ -3,3 +3,4 @@ group Test
 NUnit
 NUnit.Runners
 Unquote
+FsUnit

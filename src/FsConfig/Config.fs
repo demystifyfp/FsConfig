@@ -8,7 +8,7 @@ type ConfigParseError =
 type ConfigParseResult<'T> = Result<'T, ConfigParseError>
 
 type IConfigNameCanonicalizer = 
-  abstract member CanonicalizeConfigName: string -> string
+  abstract member Canonicalize: string -> string
 
 module internal Core =
 
@@ -20,12 +20,12 @@ module internal Core =
 
   [<NoEquality;NoComparison>]
   type ParseRecordConfig = {
-    ConfigValueGetter : IConfigReader
+    ConfigReader : IConfigReader
     ConfigNameCanonicalizer : IConfigNameCanonicalizer
   }
 
-  let tryParseWith tryParseFunc (configValueGetter : IConfigReader) name = 
-    match configValueGetter.GetValue name with
+  let tryParseWith tryParseFunc (configReader : IConfigReader) name = 
+    match configReader.GetValue name with
     | None -> NotFound name |> Error
     | Some value ->
       match tryParseFunc value with
@@ -37,10 +37,10 @@ module internal Core =
   let parseBool = tryParseWith Boolean.TryParse
   let parseString = tryParseWith (fun s -> (true,s))
 
-  let parsePrimitive<'T> (configValueGetter : IConfigReader) (envVarName : string) =
+  let parsePrimitive<'T> (configReader : IConfigReader) (envVarName : string) =
     let wrap(p : IConfigReader -> string -> 'a) = 
       envVarName
-      |> unbox<string -> ConfigParseResult<'T>> (p configValueGetter)
+      |> unbox<string -> ConfigParseResult<'T>> (p configReader)
       
     match shapeof<'T> with
     | Shape.Int32 -> wrap parseInt
@@ -51,7 +51,7 @@ module internal Core =
   let private parseRecordField 
     (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) (shape : IShapeWriteMember<'RecordType>) = 
     let configName = 
-      configNameCanonicalizer.CanonicalizeConfigName shape.Label
+      configNameCanonicalizer.Canonicalize shape.Label
     shape.Accept {
       new IWriteMemberVisitor<'RecordType, 'RecordType -> ConfigParseResult<'RecordType>> with
         member __.Visit (shape : ShapeWriteMember<'RecordType, 'FieldType>) =
@@ -60,19 +60,19 @@ module internal Core =
             | Error e -> fun _ -> Error e
       }
 
-  let private foldParseRecordFieldResponse (configValueGetter : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) record parseRecordErrors field =
-    match parseRecordField configValueGetter configNameCanonicalizer field record with
+  let private foldParseRecordFieldResponse (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) record parseRecordErrors field =
+    match parseRecordField configReader configNameCanonicalizer field record with
     | Ok _ -> parseRecordErrors
     | Error e -> e :: parseRecordErrors
   
   
-  let parseRecord<'T> (configValueGetter : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer)  =
+  let parseRecord<'T> (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer)  =
     match shapeof<'T> with
     | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
       let record = shape.CreateUninitialized()
       let parseRecordErrors =
         shape.Fields
-        |> Seq.fold (foldParseRecordFieldResponse configValueGetter configNameCanonicalizer record) []
+        |> Seq.fold (foldParseRecordFieldResponse configReader configNameCanonicalizer record) []
       match List.isEmpty parseRecordErrors with 
       | true -> Ok record 
       |_  -> Error parseRecordErrors

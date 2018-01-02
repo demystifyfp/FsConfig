@@ -21,7 +21,7 @@ type EnvConfig =
 
   static member private configNameCanonicalizer envConfigParams : IConfigNameCanonicalizer = {
     new IConfigNameCanonicalizer with
-      member __.CanonicalizeConfigName name =
+      member __.Canonicalize name =
         let actualPrefix =
           if String.IsNullOrEmpty envConfigParams.Prefix then "" 
           else sprintf "%s%s" envConfigParams.Prefix envConfigParams.Separator 
