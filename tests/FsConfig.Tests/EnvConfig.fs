@@ -42,7 +42,7 @@ let ``parseRecord with custom separator not found use case`` () =
 let ``parseRecord with custom Config Name Canonicalizer not found use case`` () =
   let result = 
     EnvConfig.Parse<SampleConfig> {
-      new ConfigNameCanonicalizer with
+      new IConfigNameCanonicalizer with
         member __.CanonicalizeConfigName name = name.ToLowerInvariant()
     }
   let expected = [NotFound "processname"; NotFound "processid"] |> Error

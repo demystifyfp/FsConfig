@@ -10,17 +10,17 @@ type EnvConfigParams = {
 }
 
 type EnvConfig =
-  static member private configValueGetter : ConfigValueGetter = {
-    new ConfigValueGetter with
-      member __.GetConfigValue name =
+  static member private configReader : IConfigReader = {
+    new IConfigReader with
+      member __.GetValue name =
         let v = Environment.GetEnvironmentVariable name
         if v = null then None else Some v
   }
   static member private envVarNameRegEx : Regex =
     Regex("([^A-Z]+|[A-Z][^A-Z]+|[A-Z]+)", RegexOptions.Compiled)
 
-  static member private configNameCanonicalizer envConfigParams : ConfigNameCanonicalizer = {
-    new ConfigNameCanonicalizer with
+  static member private configNameCanonicalizer envConfigParams : IConfigNameCanonicalizer = {
+    new IConfigNameCanonicalizer with
       member __.CanonicalizeConfigName name =
         let actualPrefix =
           if String.IsNullOrEmpty envConfigParams.Prefix then "" 
@@ -40,15 +40,15 @@ type EnvConfig =
   }
 
   static member Parse<'T when 'T : struct> (envVarName : string) = 
-    parsePrimitive<'T> EnvConfig.configValueGetter envVarName
+    parsePrimitive<'T> EnvConfig.configReader envVarName
 
   static member Parse<'T when 'T : not struct> (envConfigParams : EnvConfigParams) =
     EnvConfig.configNameCanonicalizer envConfigParams
-    |> parseRecord<'T> EnvConfig.configValueGetter 
+    |> parseRecord<'T> EnvConfig.configReader 
 
   static member Parse<'T when 'T : not struct> () =
     EnvConfig.Parse<'T> EnvConfig.defaultParams
 
-  static member Parse<'T when 'T : not struct> (configNameCanonicalizer : ConfigNameCanonicalizer) =
-    parseRecord<'T> EnvConfig.configValueGetter configNameCanonicalizer
+  static member Parse<'T when 'T : not struct> (configNameCanonicalizer : IConfigNameCanonicalizer) =
+    parseRecord<'T> EnvConfig.configReader configNameCanonicalizer
   
