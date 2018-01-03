@@ -39,16 +39,16 @@ type EnvConfig =
     Separator = "_"
   }
 
-  static member Parse<'T when 'T : struct> (envVarName : string) = 
+  static member Get<'T> (envVarName : string) = 
     parsePrimitive<'T> EnvConfig.configReader envVarName
 
-  static member Parse<'T when 'T : not struct> (envConfigParams : EnvConfigParams) =
+  static member Get<'T when 'T : not struct> (envConfigParams : EnvConfigParams) =
     EnvConfig.configNameCanonicalizer envConfigParams
     |> parseRecord<'T> EnvConfig.configReader 
 
-  static member Parse<'T when 'T : not struct> () =
-    EnvConfig.Parse<'T> EnvConfig.defaultParams
+  static member Get<'T when 'T : not struct> () =
+    EnvConfig.Get<'T> EnvConfig.defaultParams
 
-  static member Parse<'T when 'T : not struct> (configNameCanonicalizer : IConfigNameCanonicalizer) =
+  static member Get<'T when 'T : not struct> (configNameCanonicalizer : IConfigNameCanonicalizer) =
     parseRecord<'T> EnvConfig.configReader configNameCanonicalizer
   

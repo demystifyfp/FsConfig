@@ -32,20 +32,36 @@ module internal Core =
       | true, v -> Ok v
       | _ -> BadValue (name, value) |> Error
 
-
-  let parseInt = tryParseWith Int32.TryParse
-  let parseBool = tryParseWith Boolean.TryParse
-  let parseString = tryParseWith (fun s -> (true,s))
-
   let parsePrimitive<'T> (configReader : IConfigReader) (envVarName : string) =
     let wrap(p : IConfigReader -> string -> 'a) = 
       envVarName
       |> unbox<string -> ConfigParseResult<'T>> (p configReader)
       
     match shapeof<'T> with
-    | Shape.Int32 -> wrap parseInt
-    | Shape.String -> wrap parseString
-    | Shape.Bool -> wrap parseBool
+    | Shape.Byte -> tryParseWith Byte.TryParse |> wrap
+    | Shape.SByte -> tryParseWith SByte.TryParse |> wrap
+
+    | Shape.Int16 -> tryParseWith Int16.TryParse |> wrap
+    | Shape.Int32 -> tryParseWith Int32.TryParse |> wrap
+    | Shape.Int64 -> tryParseWith Int64.TryParse |> wrap
+
+    | Shape.UInt16 -> tryParseWith UInt16.TryParse |> wrap
+    | Shape.UInt32 -> tryParseWith UInt32.TryParse |> wrap
+    | Shape.UInt64 -> tryParseWith UInt64.TryParse |> wrap
+
+    | Shape.Single -> tryParseWith Single.TryParse |> wrap
+    | Shape.Double -> tryParseWith Double.TryParse |> wrap
+    | Shape.Decimal -> tryParseWith Decimal.TryParse |> wrap
+
+    | Shape.Char -> tryParseWith Char.TryParse |> wrap
+    | Shape.String -> tryParseWith (fun s -> (true,s)) |> wrap
+
+    | Shape.Bool -> tryParseWith Boolean.TryParse |> wrap
+
+    | Shape.DateTimeOffset -> tryParseWith DateTimeOffset.TryParse |> wrap
+    | Shape.DateTime -> tryParseWith DateTime.TryParse |> wrap
+    | Shape.TimeSpan -> tryParseWith TimeSpan.TryParse |> wrap
+    
     | _ -> NotSupported "unknown target type" |> Error
 
   let private parseRecordField 
