@@ -184,3 +184,22 @@ module ``Given required environment variables exists`` =
     setEnvVar ("ENV_TIME_SPAN", "99.23:59:59.9999999")
     let expected = TimeSpan.Parse "99.23:59:59.9999999"
     test <@ EnvConfig.Get<TimeSpan> "ENV_TIME_SPAN" = Ok expected @>
+
+
+module ``Getting option type`` =
+  open Common
+
+  [<Test>]
+  let ``return none if environment variable not exists`` () =
+    test <@ EnvConfig.Get<int option> "ENV_INT_OPTION_NONE" = Ok None @>
+
+  [<Test>]
+  let ``return some of value if environment variable exists`` () =
+    setEnvVar ("ENV_INT_OPTION_SOME", "42")
+    test <@ EnvConfig.Get<int option> "ENV_INT_OPTION_SOME" = Ok (Some 42) @>
+
+
+  [<Test>]
+  let ``return bad value error if environment variable exists with wrong format`` () =
+    setEnvVar ("ENV_INT_OPTION_BAD", "foo")
+    test <@ EnvConfig.Get<int option> "ENV_INT_OPTION_BAD" = Error (BadValue ("ENV_INT_OPTION_BAD", "foo")) @>

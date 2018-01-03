@@ -1,5 +1,6 @@
 namespace FsConfig
 open System.Text.RegularExpressions
+open System.Runtime.Remoting.Messaging
 
 type ConfigParseError =
 | BadValue of (string * string)
@@ -35,9 +36,9 @@ module internal Core =
       | true, v -> Ok v
       | _ -> BadValue (name, value) |> Error
 
-  let getTryParseFunc<'T> () =
+  let getTryParseFunc<'T> targetTypeShape =
     let wrap(p : 'a) = Some (unbox<TryParse<'T>> p) 
-    match shapeof<'T> with
+    match targetTypeShape with
     | Shape.Byte -> wrap Byte.TryParse 
     | Shape.SByte -> wrap SByte.TryParse
     | Shape.Int16 -> wrap Int16.TryParse
@@ -59,11 +60,41 @@ module internal Core =
     | Shape.String -> wrap (fun (s : string) -> (true,s)) 
     | _ -> None
 
-  let parse<'T> name value  =
-    match getTryParseFunc<'T> () with
+  let parseFsharpOption<'T> name value (fsharpOption : IShapeFSharpOption) =
+    let wrap (p : unit -> 'a) =
+      try 
+        ()
+        |> unbox<unit -> ConfigParseResult<'T>> p 
+      with
+      | ex -> 
+          printfn ">>>>>>>"
+          printfn "%A" ex
+          printfn ">>>>>>>"
+          NotSupported "" |> Error
+    match value with
+    | None -> (fun () -> Ok None) |> wrap
+    | Some v -> 
+      fsharpOption.Accept {
+        new IFSharpOptionVisitor<ConfigParseResult<'T>> with
+          member __.Visit<'t>() = 
+            match getTryParseFunc<'t> shapeof<'t> with
+            | Some tryParseFunc -> 
+              match tryParseWith name (Some v) tryParseFunc with
+              | Ok value -> (fun () -> value |> Some |> Ok) |> wrap
+              | Error x -> (fun () -> Error x) |> wrap
+            | None -> (fun () -> NotSupported "unknown target type" |> Error) |> wrap
+      } 
+
+  let parse<'T> name value =
+    let targetTypeShape = shapeof<'T>
+    match getTryParseFunc<'T> targetTypeShape with
     | Some tryParseFunc -> 
       tryParseWith name value tryParseFunc
-    | None -> NotSupported "unknown target type" |> Error
+    | None -> 
+      match targetTypeShape with
+      | Shape.FSharpOption fsharpOption -> 
+        parseFsharpOption<'T> name value fsharpOption
+      | _ -> NotSupported "unknown target type" |> Error
 
   let parsePrimitive<'T> (configReader : IConfigReader) (envVarName : string) =
     configReader.GetValue envVarName
