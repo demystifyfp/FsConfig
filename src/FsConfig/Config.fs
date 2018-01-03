@@ -1,4 +1,5 @@
 namespace FsConfig
+open System.Text.RegularExpressions
 
 type ConfigParseError =
 | BadValue of (string * string)
@@ -24,45 +25,50 @@ module internal Core =
     ConfigNameCanonicalizer : IConfigNameCanonicalizer
   }
 
-  let tryParseWith tryParseFunc (configReader : IConfigReader) name = 
-    match configReader.GetValue name with
+  type TryParse<'a> = string -> bool * 'a
+
+  let tryParseWith name value tryParseFunc  = 
+    match value with
     | None -> NotFound name |> Error
-    | Some value ->
+    | Some value -> 
       match tryParseFunc value with
       | true, v -> Ok v
       | _ -> BadValue (name, value) |> Error
 
-  let parsePrimitive<'T> (configReader : IConfigReader) (envVarName : string) =
-    let wrap(p : IConfigReader -> string -> 'a) = 
-      envVarName
-      |> unbox<string -> ConfigParseResult<'T>> (p configReader)
+  let parse<'T> name value  =
+    let wrap(p : 'a) = 
+      tryParseWith name value (unbox<TryParse<'T>> p) 
       
     match shapeof<'T> with
-    | Shape.Byte -> tryParseWith Byte.TryParse |> wrap
-    | Shape.SByte -> tryParseWith SByte.TryParse |> wrap
+    | Shape.Byte -> wrap Byte.TryParse 
+    | Shape.SByte -> wrap SByte.TryParse
 
-    | Shape.Int16 -> tryParseWith Int16.TryParse |> wrap
-    | Shape.Int32 -> tryParseWith Int32.TryParse |> wrap
-    | Shape.Int64 -> tryParseWith Int64.TryParse |> wrap
+    | Shape.Int16 -> wrap Int16.TryParse
+    | Shape.Int32 -> wrap Int32.TryParse
+    | Shape.Int64 -> wrap Int64.TryParse 
 
-    | Shape.UInt16 -> tryParseWith UInt16.TryParse |> wrap
-    | Shape.UInt32 -> tryParseWith UInt32.TryParse |> wrap
-    | Shape.UInt64 -> tryParseWith UInt64.TryParse |> wrap
+    | Shape.UInt16 -> wrap UInt16.TryParse 
+    | Shape.UInt32 -> wrap UInt32.TryParse 
+    | Shape.UInt64 -> wrap UInt64.TryParse 
 
-    | Shape.Single -> tryParseWith Single.TryParse |> wrap
-    | Shape.Double -> tryParseWith Double.TryParse |> wrap
-    | Shape.Decimal -> tryParseWith Decimal.TryParse |> wrap
+    | Shape.Single -> wrap Single.TryParse 
+    | Shape.Double -> wrap Double.TryParse 
+    | Shape.Decimal -> wrap Decimal.TryParse 
 
-    | Shape.Char -> tryParseWith Char.TryParse |> wrap
-    | Shape.String -> tryParseWith (fun s -> (true,s)) |> wrap
+    | Shape.Char -> wrap Char.TryParse 
+    | Shape.String -> wrap (fun (s : string) -> (true,s)) 
 
-    | Shape.Bool -> tryParseWith Boolean.TryParse |> wrap
+    | Shape.Bool -> wrap Boolean.TryParse 
 
-    | Shape.DateTimeOffset -> tryParseWith DateTimeOffset.TryParse |> wrap
-    | Shape.DateTime -> tryParseWith DateTime.TryParse |> wrap
-    | Shape.TimeSpan -> tryParseWith TimeSpan.TryParse |> wrap
+    | Shape.DateTimeOffset -> wrap DateTimeOffset.TryParse 
+    | Shape.DateTime -> wrap DateTime.TryParse 
+    | Shape.TimeSpan -> wrap TimeSpan.TryParse 
     
     | _ -> NotSupported "unknown target type" |> Error
+
+  let rec parsePrimitive<'T> (configReader : IConfigReader) (envVarName : string) =
+    configReader.GetValue envVarName
+    |> parse<'T> envVarName 
 
   let private parseRecordField 
     (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) (shape : IShapeWriteMember<'RecordType>) = 
