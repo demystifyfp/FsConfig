@@ -35,38 +35,37 @@ module internal Core =
       | true, v -> Ok v
       | _ -> BadValue (name, value) |> Error
 
-  let parse<'T> name value  =
-    let wrap(p : 'a) = 
-      tryParseWith name value (unbox<TryParse<'T>> p) 
-      
+  let getTryParseFunc<'T> () =
+    let wrap(p : 'a) = Some (unbox<TryParse<'T>> p) 
     match shapeof<'T> with
     | Shape.Byte -> wrap Byte.TryParse 
     | Shape.SByte -> wrap SByte.TryParse
-
     | Shape.Int16 -> wrap Int16.TryParse
     | Shape.Int32 -> wrap Int32.TryParse
-    | Shape.Int64 -> wrap Int64.TryParse 
-
+    | Shape.Int64 -> wrap Int64.TryParse
     | Shape.UInt16 -> wrap UInt16.TryParse 
     | Shape.UInt32 -> wrap UInt32.TryParse 
     | Shape.UInt64 -> wrap UInt64.TryParse 
-
     | Shape.Single -> wrap Single.TryParse 
     | Shape.Double -> wrap Double.TryParse 
     | Shape.Decimal -> wrap Decimal.TryParse 
-
     | Shape.Char -> wrap Char.TryParse 
-    | Shape.String -> wrap (fun (s : string) -> (true,s)) 
-
-    | Shape.Bool -> wrap Boolean.TryParse 
-
+    | Shape.String -> wrap (fun (s : string) -> (true,s))
+    | Shape.Bool -> wrap Boolean.TryParse
     | Shape.DateTimeOffset -> wrap DateTimeOffset.TryParse 
     | Shape.DateTime -> wrap DateTime.TryParse 
     | Shape.TimeSpan -> wrap TimeSpan.TryParse 
-    
-    | _ -> NotSupported "unknown target type" |> Error
+    | Shape.Char -> wrap Char.TryParse 
+    | Shape.String -> wrap (fun (s : string) -> (true,s)) 
+    | _ -> None
 
-  let rec parsePrimitive<'T> (configReader : IConfigReader) (envVarName : string) =
+  let parse<'T> name value  =
+    match getTryParseFunc<'T> () with
+    | Some tryParseFunc -> 
+      tryParseWith name value tryParseFunc
+    | None -> NotSupported "unknown target type" |> Error
+
+  let parsePrimitive<'T> (configReader : IConfigReader) (envVarName : string) =
     configReader.GetValue envVarName
     |> parse<'T> envVarName 
 
