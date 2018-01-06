@@ -70,19 +70,18 @@ module internal Core =
           printfn "%A" ex
           printfn ">>>>>>>"
           NotSupported "" |> Error
-    match value with
-    | None -> Ok None |> wrap
-    | Some v -> 
-      fsharpOption.Accept {
-        new IFSharpOptionVisitor<ConfigParseResult<'T>> with
-          member __.Visit<'t>() = 
-            match getTryParseFunc<'t> shapeof<'t> with
-            | Some tryParseFunc -> 
-              match tryParseWith name (Some v) tryParseFunc with
-              | Ok value -> (value |> Some |> Ok) |> wrap
-              | Error x -> Error x |> wrap
-            | None -> NotSupported "unknown target type" |> Error |> wrap
-      } 
+    fsharpOption.Accept {
+      new IFSharpOptionVisitor<ConfigParseResult<'T>> with
+        member __.Visit<'t>() = 
+          match getTryParseFunc<'t> shapeof<'t> with
+          | Some tryParseFunc -> 
+            match tryParseWith name value tryParseFunc with
+            | Ok value -> (value |> Some |> Ok) |> wrap
+            | Error (NotFound _) -> (None |> Ok) |> wrap
+            | Error x -> Error x |> wrap
+          | None -> NotSupported "unknown target type" |> Error |> wrap
+    } 
+       
 
   let parse<'T> name value =
     let targetTypeShape = shapeof<'T>
