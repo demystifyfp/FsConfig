@@ -203,3 +203,17 @@ module ``Getting option type`` =
   let ``return bad value error if environment variable exists with wrong format`` () =
     setEnvVar ("ENV_INT_OPTION_BAD", "foo")
     test <@ EnvConfig.Get<int option> "ENV_INT_OPTION_BAD" = Error (BadValue ("ENV_INT_OPTION_BAD", "foo")) @>
+
+
+module ``Getting record with option type`` =
+  open Common
+
+  type Config = {
+    ProcessCount : int option
+    Timeout : TimeSpan option
+  }
+
+  [<Test>]
+  let ``return record with corresponding option value`` () =
+    setEnvVar ("PROCESS_COUNT", "42")
+    test <@ EnvConfig.Get<Config> () = Ok ({ProcessCount = Some 42; Timeout = None}) @>
