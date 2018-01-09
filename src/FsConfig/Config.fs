@@ -105,20 +105,20 @@ module internal Core =
   let rec parse<'T> (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) name =
     let value = configReader.GetValue name
     let targetTypeShape = shapeof<'T>
-    match getTryParseFunc<'T> targetTypeShape with
-    | Some tryParseFunc -> 
-      match value with
-      | Some v -> tryParseWith name v tryParseFunc
-      | None -> NotFound name |> Error
-    | None -> 
-      match targetTypeShape with
-      | Shape.FSharpOption fsharpOption -> 
-        parseFSharpOption<'T> name value fsharpOption
-      | Shape.FSharpList fsharpList ->
-        parseFSharpList<'T> name value fsharpList
-      | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
-        parseFSharpRecord configReader configNameCanonicalizer name shape
-      | _ -> NotSupported "unknown target type" |> Error
+    match targetTypeShape with
+    | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
+      parseFSharpRecord configReader configNameCanonicalizer name shape
+    | Shape.FSharpOption fsharpOption -> 
+      parseFSharpOption<'T> name value fsharpOption
+    | Shape.FSharpList fsharpList ->
+      parseFSharpList<'T> name value fsharpList
+    | _ ->
+      match getTryParseFunc<'T> targetTypeShape with
+      | Some tryParseFunc -> 
+        match value with
+        | Some v -> tryParseWith name v tryParseFunc
+        | None -> NotFound name |> Error
+      | None -> NotSupported "unknown target type" |> Error
   and parseFSharpRecord (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) prefix shape =
     let record = shape.CreateUninitialized()
     shape.Fields
