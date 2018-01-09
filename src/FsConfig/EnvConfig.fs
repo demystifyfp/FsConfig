@@ -21,10 +21,13 @@ type EnvConfig =
 
   static member private configNameCanonicalizer envConfigParams : IConfigNameCanonicalizer = {
     new IConfigNameCanonicalizer with
-      member __.Canonicalize name =
+      member __.CanonicalizeWithPrefix prefix name =
         let actualPrefix =
-          if String.IsNullOrEmpty envConfigParams.Prefix then "" 
-          else sprintf "%s%s" envConfigParams.Prefix envConfigParams.Separator 
+          match (String.IsNullOrEmpty envConfigParams.Prefix, String.IsNullOrEmpty prefix) with
+          | true, true -> ""
+          | true, false -> sprintf "%s%s" prefix envConfigParams.Separator 
+          | false, true -> sprintf "%s%s" envConfigParams.Prefix envConfigParams.Separator
+          | false, false -> sprintf "%s%s%s%s"envConfigParams.Prefix envConfigParams.Separator prefix envConfigParams.Separator
         let subStrings =
           EnvConfig.envVarNameRegEx.Matches name
           |> Seq.cast
@@ -32,7 +35,9 @@ type EnvConfig =
           |> Seq.toArray
         String.Join(envConfigParams.Separator, subStrings)
         |> sprintf "%s%s" actualPrefix
-        
+
+      member this.Canonicalize (name : string) =
+        this.CanonicalizeWithPrefix "" name
   }
   static member defaultParams : EnvConfigParams = {
     Prefix = ""

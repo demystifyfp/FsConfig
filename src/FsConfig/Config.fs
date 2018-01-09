@@ -10,6 +10,7 @@ type ConfigParseResult<'T> = Result<'T, ConfigParseError>
 
 type IConfigNameCanonicalizer = 
   abstract member Canonicalize: string -> string
+  abstract member CanonicalizeWithPrefix: string -> string -> string
 
 module internal Core =
 
@@ -117,9 +118,9 @@ module internal Core =
       | Shape.FSharpList fsharpList ->
         parseFSharpList<'T> name value fsharpList
       | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
-        parseFSharpRecord configReader configNameCanonicalizer shape
+        parseFSharpRecord configReader configNameCanonicalizer name shape
       | _ -> NotSupported "unknown target type" |> Error
-  and parseFSharpRecord (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) shape =
+  and parseFSharpRecord (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) name shape =
     let record = shape.CreateUninitialized()
     shape.Fields
     |> Seq.fold 

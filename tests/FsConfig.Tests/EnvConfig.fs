@@ -20,6 +20,7 @@ module Common =
   let lowerCaseConfigNameCanonicalizer = {
         new IConfigNameCanonicalizer with
           member __.Canonicalize name = name.ToLowerInvariant()
+          member __.CanonicalizeWithPrefix prefix name = sprintf "%s%s" prefix name
       }
   let setEnvVar (key,value) =
     Environment.SetEnvironmentVariable(key,value, EnvironmentVariableTarget.Process)
