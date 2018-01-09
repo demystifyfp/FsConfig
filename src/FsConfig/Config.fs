@@ -1,6 +1,7 @@
 namespace FsConfig
 open System.Text.RegularExpressions
 open System.Runtime.Remoting.Messaging
+open System
 
 type ConfigParseError =
 | BadValue of (string * string)
@@ -77,6 +78,36 @@ module internal Core =
           | None -> NotSupported "unknown target type" |> Error 
     }
 
+  let parseListReducer name tryParseFunc acc element = 
+    match acc with
+    | Error x -> Error x
+    | Ok xs -> 
+      match tryParseWith name (Some element) tryParseFunc with
+      | Error x -> Error x
+      | Ok v -> v :: xs |> Ok
+  let parseFsharpList<'T> name value (fsharpList: IShapeFSharpList) =
+    let wrap (p : ConfigParseResult<'a>) =
+      unbox<ConfigParseResult<'T>> p
+    fsharpList.Accept {
+      new IFSharpListVisitor<ConfigParseResult<'T>> with
+        member __.Visit<'t>() =
+          match value with
+          | None -> 
+            let result : ConfigParseResult<'t list> = [] |> Ok 
+            wrap result
+          | Some (v : string) -> 
+            match getTryParseFunc<'t> fsharpList.Element with
+            | Some tryParseFunc -> 
+              let result =
+                v.Split(',') 
+                |> Array.map (fun s -> s.Trim())
+                |> Array.filter (String.IsNullOrWhiteSpace >> not)
+                |> Array.fold (parseListReducer name tryParseFunc) (Ok [])
+              match result with
+              | Ok xs -> List.rev xs |> Ok |> wrap
+              | Error x -> Error x 
+            | None -> NotSupported "unknown target type" |> Error 
+    }
   let parse<'T> name value =
     let targetTypeShape = shapeof<'T>
     match getTryParseFunc<'T> targetTypeShape with
@@ -86,6 +117,8 @@ module internal Core =
       match targetTypeShape with
       | Shape.FSharpOption fsharpOption -> 
         parseFsharpOption<'T> name value fsharpOption
+      | Shape.FSharpList fsharpList ->
+        parseFsharpList<'T> name value fsharpList
       | _ -> NotSupported "unknown target type" |> Error
 
   let parsePrimitive<'T> (configReader : IConfigReader) (envVarName : string) =

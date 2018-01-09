@@ -204,7 +204,6 @@ module ``Getting option type`` =
     setEnvVar ("ENV_INT_OPTION_BAD", "foo")
     test <@ EnvConfig.Get<int option> "ENV_INT_OPTION_BAD" = Error (BadValue ("ENV_INT_OPTION_BAD", "foo")) @>
 
-
 module ``Getting record with option type`` =
   open Common
 
@@ -217,3 +216,32 @@ module ``Getting record with option type`` =
   let ``return record with corresponding option value`` () =
     setEnvVar ("PROCESS_COUNT", "42")
     test <@ EnvConfig.Get<Config> () = Ok ({ProcessCount = Some 42; Timeout = None}) @>
+
+module ``Getting list type`` =
+  open Common
+
+  [<Test>]
+  let ``return empty list if environment variable not exists`` () =
+    test <@ EnvConfig.Get<int list> "ENV_INT_LIST_EMPTY" = Ok [] @>
+
+  [<Test>]
+  let ``return singleton list if environment variable exist with one value`` () =
+    setEnvVar ("ENV_INT_LIST_SINGLETON", "42")
+    test <@ EnvConfig.Get<int list> "ENV_INT_LIST_SINGLETON" = Ok [42] @>
+
+  [<Test>]
+  let ``return list if environment variable exist with mutiple comma separated values`` () =
+    setEnvVar ("ENV_INT_LIST_SINGLETON", "42, 43,44")
+    test <@ EnvConfig.Get<int list> "ENV_INT_LIST_SINGLETON" = Ok [42;43;44] @>
+
+module ``Getting record with list type`` =
+  open Common
+
+  type Config = {
+    MagicNumbers : int list
+  }
+
+  [<Test>]
+  let ``return record with corresponding option value`` () =
+    setEnvVar ("MAGIC_NUMBERS", "42, 99, 101")
+    test <@ EnvConfig.Get<Config> () = Ok ({MagicNumbers = [42;99;101]}) @>
