@@ -27,12 +27,10 @@ module internal Core =
   type TryParse<'a> = string -> bool * 'a
 
   let tryParseWith name value tryParseFunc  = 
-    match value with
-    | None -> NotFound name |> Error
-    | Some value -> 
-      match tryParseFunc value with
-      | true, v -> Ok v
-      | _ -> BadValue (name, value) |> Error
+    match tryParseFunc value with
+    | true, v -> Ok v
+    | _ -> BadValue (name, value) |> Error
+      
 
   let getTryParseFunc<'T> targetTypeShape =
     let wrap(p : 'a) = Some (unbox<TryParse<'T>> p) 
@@ -64,22 +62,23 @@ module internal Core =
     fsharpOption.Accept {
       new IFSharpOptionVisitor<ConfigParseResult<'T>> with
         member __.Visit<'t>() =
-          match getTryParseFunc<'t> fsharpOption.Element with
-          | Some tryParseFunc -> 
-            match tryParseWith name value tryParseFunc with
-            | Ok value -> value |> Some |> Ok |> wrap 
-            | Error (NotFound _) -> 
-              let result : ConfigParseResult<'t option> = None |> Ok 
-              wrap result
-            | Error x -> Error x 
-          | None -> NotSupported "unknown target type" |> Error 
+          match value with
+          | None -> 
+            let result : ConfigParseResult<'t option> = None |> Ok 
+            wrap result
+          | Some v ->
+            match getTryParseFunc<'t> fsharpOption.Element with
+            | Some tryParseFunc -> 
+              tryParseWith name v tryParseFunc 
+              |> Result.bind (Some >> Ok >> wrap) 
+            | None -> NotSupported "unknown target type" |> Error 
     }
 
   let parseListReducer name tryParseFunc acc element = 
     acc
     |> Result.bind 
         (fun xs ->
-          tryParseWith name (Some element) tryParseFunc
+          tryParseWith name element tryParseFunc
           |> Result.map (fun v -> v :: xs)
         )
 
@@ -100,7 +99,7 @@ module internal Core =
               |> Array.map (fun s -> s.Trim())
               |> Array.filter (String.IsNullOrWhiteSpace >> not)
               |> Array.fold (parseListReducer name tryParseFunc) (Ok [])
-              |> Result.bind (fun xs -> List.rev xs |> Ok |> wrap)
+              |> Result.bind (List.rev >> Ok >> wrap)
             | None -> NotSupported "unknown target type" |> Error 
     }
   let rec parse<'T> (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) name =
@@ -108,7 +107,9 @@ module internal Core =
     let targetTypeShape = shapeof<'T>
     match getTryParseFunc<'T> targetTypeShape with
     | Some tryParseFunc -> 
-      tryParseWith name value tryParseFunc
+      match value with
+      | Some v -> tryParseWith name v tryParseFunc
+      | None -> NotFound name |> Error
     | None -> 
       match targetTypeShape with
       | Shape.FSharpOption fsharpOption -> 
@@ -135,4 +136,4 @@ module internal Core =
                 | Error e -> Error e
           }
        ) (Ok []) 
-    |> Result.map (fun xs -> xs |> List.fold (fun acc f -> f acc) record)
+    |> Result.map (List.fold (fun acc f -> f acc) record)
