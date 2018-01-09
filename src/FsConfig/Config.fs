@@ -1,6 +1,4 @@
 namespace FsConfig
-open System.Text.RegularExpressions
-open System.Runtime.Remoting.Messaging
 open System
 
 type ConfigParseError =
@@ -16,7 +14,6 @@ type IConfigNameCanonicalizer =
 module internal Core =
 
   open TypeShape
-  open System
 
   type IConfigReader =
     abstract member GetValue : string -> string option
