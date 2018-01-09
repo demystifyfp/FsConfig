@@ -4,6 +4,7 @@ open System
 open NUnit.Framework
 open FsConfig
 open Swensen.Unquote.Assertions
+open System.ComponentModel
 
 type SampleConfig = {
   ProcessId : int
@@ -20,7 +21,7 @@ module Common =
   let lowerCaseConfigNameCanonicalizer = {
         new IConfigNameCanonicalizer with
           member __.Canonicalize name = name.ToLowerInvariant()
-          member __.CanonicalizeWithPrefix prefix name = sprintf "%s%s" prefix name
+          member __.CanonicalizeWithPrefix _ name = name.ToLowerInvariant()
       }
   let setEnvVar (key,value) =
     Environment.SetEnvironmentVariable(key,value, EnvironmentVariableTarget.Process)
@@ -248,3 +249,36 @@ module ``Getting record with list type`` =
   let ``return record with corresponding option value`` () =
     setEnvVar ("MAGIC_NUMBERS", "42, 99, 101")
     test <@ EnvConfig.Get<Config> () = Ok ({MagicNumbers = [42;99;101]}) @>
+
+
+module ``Getting record with record type`` =
+  open Common
+
+  type AwsConfig = {
+    AccessKeyId : string
+    DefaultRegion : string
+    SecretAccessKey : string
+  }
+
+  type Config = {
+    MagicNumber : int
+    Aws : AwsConfig
+  }
+
+  [<Test>]
+  let ``return record with corresponding option value`` () =
+    setEnvVar ("MAGIC_NUMBER", "42")
+    setEnvVar ("AWS_ACCESS_KEY_ID", "Id-123")
+    setEnvVar ("AWS_SECRET_ACCESS_KEY", "secret123")
+    setEnvVar ("AWS_DEFAULT_REGION", "us-east-1")
+    let expected = 
+      {
+        MagicNumber = 42
+        Aws = 
+        {
+          AccessKeyId = "Id-123"
+          DefaultRegion = "us-east-1"
+          SecretAccessKey = "secret123"
+        }
+      } |> Ok
+    test <@ EnvConfig.Get<Config> () = expected @>

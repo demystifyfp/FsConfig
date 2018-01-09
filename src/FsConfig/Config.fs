@@ -128,7 +128,7 @@ module internal Core =
         match acc with
         | Error x -> Error x 
         | Ok xs ->
-          let configName = configNameCanonicalizer.Canonicalize field.Label
+          let configName = configNameCanonicalizer.CanonicalizeWithPrefix name field.Label
           field.Accept {
             new IWriteMemberVisitor<'RecordType, ConfigParseResult<('RecordType -> 'RecordType) list>> with
               member __.Visit (shape : ShapeWriteMember<'RecordType, 'FieldType>) =
