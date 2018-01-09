@@ -21,7 +21,7 @@ type EnvConfig =
 
   static member private configNameCanonicalizer envConfigParams : IConfigNameCanonicalizer = {
     new IConfigNameCanonicalizer with
-      member __.CanonicalizeWithPrefix prefix name =
+      member __.Canonicalize prefix name =
         let actualPrefix =
           match (String.IsNullOrEmpty envConfigParams.Prefix, String.IsNullOrEmpty prefix) with
           | true, true -> ""
@@ -35,9 +35,6 @@ type EnvConfig =
           |> Seq.toArray
         String.Join(envConfigParams.Separator, subStrings)
         |> sprintf "%s%s" actualPrefix
-
-      member this.Canonicalize (name : string) =
-        this.CanonicalizeWithPrefix "" name
   }
   static member defaultParams : EnvConfigParams = {
     Prefix = ""

@@ -9,8 +9,7 @@ type ConfigParseError =
 type ConfigParseResult<'T> = Result<'T, ConfigParseError>
 
 type IConfigNameCanonicalizer = 
-  abstract member Canonicalize: string -> string
-  abstract member CanonicalizeWithPrefix: string -> string -> string
+  abstract member Canonicalize: string -> string -> string
 
 module internal Core =
 
@@ -120,7 +119,7 @@ module internal Core =
       | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
         parseFSharpRecord configReader configNameCanonicalizer name shape
       | _ -> NotSupported "unknown target type" |> Error
-  and parseFSharpRecord (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) name shape =
+  and parseFSharpRecord (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) prefix shape =
     let record = shape.CreateUninitialized()
     shape.Fields
     |> Seq.fold 
@@ -128,7 +127,7 @@ module internal Core =
         match acc with
         | Error x -> Error x 
         | Ok xs ->
-          let configName = configNameCanonicalizer.CanonicalizeWithPrefix name field.Label
+          let configName = configNameCanonicalizer.Canonicalize prefix field.Label
           field.Accept {
             new IWriteMemberVisitor<'RecordType, ConfigParseResult<('RecordType -> 'RecordType) list>> with
               member __.Visit (shape : ShapeWriteMember<'RecordType, 'FieldType>) =

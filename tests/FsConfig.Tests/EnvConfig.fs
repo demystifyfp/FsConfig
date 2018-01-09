@@ -20,8 +20,7 @@ module Common =
 
   let lowerCaseConfigNameCanonicalizer = {
         new IConfigNameCanonicalizer with
-          member __.Canonicalize name = name.ToLowerInvariant()
-          member __.CanonicalizeWithPrefix _ name = name.ToLowerInvariant()
+          member __.Canonicalize _ name = name.ToLowerInvariant()
       }
   let setEnvVar (key,value) =
     Environment.SetEnvironmentVariable(key,value, EnvironmentVariableTarget.Process)
