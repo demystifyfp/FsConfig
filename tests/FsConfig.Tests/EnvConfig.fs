@@ -35,7 +35,7 @@ module ``Given required environment variables not exist`` =
   [<Test>]
   let ``getRecord should return not found error`` () =
     let result = EnvConfig.Get<SampleConfig>()
-    let expected = [NotFound "PROCESS_NAME"; NotFound "PROCESS_ID"] |> Error
+    let expected = NotFound "PROCESS_ID" |> Error
     test <@ expected = result @>
 
 
@@ -43,14 +43,14 @@ module ``Given required environment variables not exist`` =
   let ``getRecord with custom prefix should return not found error`` () =
     let result = 
       EnvConfig.Get<SampleConfig> defaultParamsWithCustomPrefix
-    let expected = [NotFound "MYAPP_PROCESS_NAME"; NotFound "MYAPP_PROCESS_ID"] |> Error
+    let expected = NotFound "MYAPP_PROCESS_ID" |> Error
     test <@ expected = result @>
 
   [<Test>]
   let ``getRecord with custom separator should return not found error`` () =
     let result = 
       EnvConfig.Get<SampleConfig> defaultParamsWithCustomSeparator
-    let expected = [NotFound "PROCESS-NAME"; NotFound "PROCESS-ID"] |> Error
+    let expected = NotFound "PROCESS-ID" |> Error
     test <@ expected = result @>
 
 
@@ -58,7 +58,7 @@ module ``Given required environment variables not exist`` =
   let ``getRecord with custom Config Name Canonicalizer should return not found error`` () =
     let result = 
       EnvConfig.Get<SampleConfig> lowerCaseConfigNameCanonicalizer
-    let expected = [NotFound "processname"; NotFound "processid"] |> Error
+    let expected = NotFound "processid" |> Error
     test <@ expected = result @>
 
 
@@ -210,12 +210,14 @@ module ``Getting record with option type`` =
   type Config = {
     ProcessCount : int option
     Timeout : TimeSpan option
+    AwsAccessKeyId : string option
   }
 
   [<Test>]
   let ``return record with corresponding option value`` () =
     setEnvVar ("PROCESS_COUNT", "42")
-    test <@ EnvConfig.Get<Config> () = Ok ({ProcessCount = Some 42; Timeout = None}) @>
+    setEnvVar ("AWS_ACCESS_KEY_ID", "ID-123")
+    test <@ EnvConfig.Get<Config> () = Ok ({ProcessCount = Some 42; Timeout = None; AwsAccessKeyId = Some "ID-123"}) @>
 
 module ``Getting list type`` =
   open Common

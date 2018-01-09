@@ -58,7 +58,7 @@ module internal Core =
     | Shape.String -> wrap (fun (s : string) -> (true,s)) 
     | _ -> None
 
-  let parseFsharpOption<'T> name value (fsharpOption : IShapeFSharpOption) =
+  let parseFSharpOption<'T> name value (fsharpOption : IShapeFSharpOption) =
     let wrap (p : ConfigParseResult<'a>) =
       unbox<ConfigParseResult<'T>> p
     fsharpOption.Accept {
@@ -76,13 +76,14 @@ module internal Core =
     }
 
   let parseListReducer name tryParseFunc acc element = 
-    match acc with
-    | Error x -> Error x
-    | Ok xs -> 
-      match tryParseWith name (Some element) tryParseFunc with
-      | Error x -> Error x
-      | Ok v -> v :: xs |> Ok
-  let parseFsharpList<'T> name value (fsharpList: IShapeFSharpList) =
+    acc
+    |> Result.bind 
+        (fun xs ->
+          tryParseWith name (Some element) tryParseFunc
+          |> Result.map (fun v -> v :: xs)
+        )
+
+  let parseFSharpList<'T> name value (fsharpList: IShapeFSharpList) =
     let wrap (p : ConfigParseResult<'a>) =
       unbox<ConfigParseResult<'T>> p
     fsharpList.Accept {
@@ -95,17 +96,15 @@ module internal Core =
           | Some (v : string) -> 
             match getTryParseFunc<'t> fsharpList.Element with
             | Some tryParseFunc -> 
-              let result =
-                v.Split(',') 
-                |> Array.map (fun s -> s.Trim())
-                |> Array.filter (String.IsNullOrWhiteSpace >> not)
-                |> Array.fold (parseListReducer name tryParseFunc) (Ok [])
-              match result with
-              | Ok xs -> List.rev xs |> Ok |> wrap
-              | Error x -> Error x 
+              v.Split(',') 
+              |> Array.map (fun s -> s.Trim())
+              |> Array.filter (String.IsNullOrWhiteSpace >> not)
+              |> Array.fold (parseListReducer name tryParseFunc) (Ok [])
+              |> Result.bind (fun xs -> List.rev xs |> Ok |> wrap)
             | None -> NotSupported "unknown target type" |> Error 
     }
-  let parse<'T> name value =
+  let rec parse<'T> (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) name =
+    let value = configReader.GetValue name
     let targetTypeShape = shapeof<'T>
     match getTryParseFunc<'T> targetTypeShape with
     | Some tryParseFunc -> 
@@ -113,41 +112,27 @@ module internal Core =
     | None -> 
       match targetTypeShape with
       | Shape.FSharpOption fsharpOption -> 
-        parseFsharpOption<'T> name value fsharpOption
+        parseFSharpOption<'T> name value fsharpOption
       | Shape.FSharpList fsharpList ->
-        parseFsharpList<'T> name value fsharpList
+        parseFSharpList<'T> name value fsharpList
+      | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
+        parseFSharpRecord configReader configNameCanonicalizer shape
       | _ -> NotSupported "unknown target type" |> Error
-
-  let parsePrimitive<'T> (configReader : IConfigReader) (envVarName : string) =
-    configReader.GetValue envVarName
-    |> parse<'T> envVarName 
-
-  let private parseRecordField 
-    (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) (shape : IShapeWriteMember<'RecordType>) = 
-    let configName = 
-      configNameCanonicalizer.Canonicalize shape.Label
-    shape.Accept {
-      new IWriteMemberVisitor<'RecordType, 'RecordType -> ConfigParseResult<'RecordType>> with
-        member __.Visit (shape : ShapeWriteMember<'RecordType, 'FieldType>) =
-          match parsePrimitive<'FieldType> configReader configName with
-            | Ok fieldValue -> fun record -> shape.Inject record fieldValue |> Ok
-            | Error e -> fun _ -> Error e
-      }
-
-  let private foldParseRecordFieldResponse (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) record parseRecordErrors field =
-    match parseRecordField configReader configNameCanonicalizer field record with
-    | Ok _ -> parseRecordErrors
-    | Error e -> e :: parseRecordErrors
-  
-  
-  let parseRecord<'T> (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer)  =
-    match shapeof<'T> with
-    | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
-      let record = shape.CreateUninitialized()
-      let parseRecordErrors =
-        shape.Fields
-        |> Seq.fold (foldParseRecordFieldResponse configReader configNameCanonicalizer record) []
-      match List.isEmpty parseRecordErrors with 
-      | true -> Ok record 
-      |_  -> Error parseRecordErrors
-    | _ -> failwith "not supported"
+  and parseFSharpRecord (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) shape =
+    let record = shape.CreateUninitialized()
+    shape.Fields
+    |> Seq.fold 
+      (fun acc field ->
+        match acc with
+        | Error x -> Error x 
+        | Ok xs ->
+          let configName = configNameCanonicalizer.Canonicalize field.Label
+          field.Accept {
+            new IWriteMemberVisitor<'RecordType, ConfigParseResult<('RecordType -> 'RecordType) list>> with
+              member __.Visit (shape : ShapeWriteMember<'RecordType, 'FieldType>) =
+                match parse<'FieldType> configReader configNameCanonicalizer configName with
+                | Ok fieldValue -> (fun record -> shape.Inject record fieldValue) :: xs |> Ok
+                | Error e -> Error e
+          }
+       ) (Ok []) 
+    |> Result.map (fun xs -> xs |> List.fold (fun acc f -> f acc) record)

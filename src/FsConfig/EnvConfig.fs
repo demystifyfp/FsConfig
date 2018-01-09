@@ -40,15 +40,18 @@ type EnvConfig =
   }
 
   static member Get<'T> (envVarName : string) = 
-    parsePrimitive<'T> EnvConfig.configReader envVarName
+    let canonicalizer = 
+      EnvConfig.configNameCanonicalizer EnvConfig.defaultParams
+    parse<'T> EnvConfig.configReader canonicalizer envVarName
 
   static member Get<'T when 'T : not struct> (envConfigParams : EnvConfigParams) =
-    EnvConfig.configNameCanonicalizer envConfigParams
-    |> parseRecord<'T> EnvConfig.configReader 
+    let canonicalizer = 
+      EnvConfig.configNameCanonicalizer envConfigParams
+    parse<'T> EnvConfig.configReader canonicalizer ""
 
   static member Get<'T when 'T : not struct> () =
     EnvConfig.Get<'T> EnvConfig.defaultParams
 
   static member Get<'T when 'T : not struct> (configNameCanonicalizer : IConfigNameCanonicalizer) =
-    parseRecord<'T> EnvConfig.configReader configNameCanonicalizer
+    parse<'T> EnvConfig.configReader configNameCanonicalizer ""
   
