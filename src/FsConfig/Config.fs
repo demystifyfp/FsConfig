@@ -11,6 +11,12 @@ type ConfigParseResult<'T> = Result<'T, ConfigParseError>
 type IConfigNameCanonicalizer = 
   abstract member Canonicalize: string -> string -> string
 
+[<AttributeUsage(AttributeTargets.Property, AllowMultiple = false)>]
+type CustomNameAttribute(name : string) =
+  inherit Attribute ()
+  member __.Name = name
+
+
 module internal Core =
 
   open TypeShape
@@ -127,7 +133,17 @@ module internal Core =
         match acc with
         | Error x -> Error x 
         | Ok xs ->
-          let configName = configNameCanonicalizer.Canonicalize prefix field.Label
+
+          let customHeadAttribute =
+            field.MemberInfo.GetCustomAttributes(typeof<CustomNameAttribute>, true)
+            |> Seq.tryHead
+            |> Option.map (fun a -> a :?> CustomNameAttribute)
+
+          let configName = 
+            match customHeadAttribute with
+            | Some attr -> attr.Name
+            | None -> configNameCanonicalizer.Canonicalize prefix field.Label
+          
           field.Accept {
             new IWriteMemberVisitor<'RecordType, ConfigParseResult<('RecordType -> 'RecordType) list>> with
               member __.Visit (shape : ShapeWriteMember<'RecordType, 'FieldType>) =

@@ -281,3 +281,17 @@ module ``Getting record with record type`` =
         }
       } |> Ok
     test <@ EnvConfig.Get<Config> () = expected @>
+
+
+ module ``Getting record with custom name properties`` =
+  open Common
+
+  type Config = {
+    [<CustomName("magic-number")>]
+    MagicNumber : int
+  }
+
+  [<Test>]
+  let ``return record with corresponding value`` () =
+    setEnvVar ("magic-number", "42")
+    test <@ EnvConfig.Get<Config> () = Ok ({MagicNumber = 42}) @>
