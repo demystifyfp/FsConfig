@@ -186,6 +186,12 @@ module ``Given required environment variables exists`` =
     let expected = TimeSpan.Parse "99.23:59:59.9999999"
     test <@ EnvConfig.Get<TimeSpan> "ENV_TIME_SPAN" = Ok expected @>
 
+  [<Test>]
+  let ``get Guid should succeed`` () =
+    let expected = System.Guid.Parse("f36fd7ca-1005-4d72-af92-c62e63cccaaf")
+    setEnvVar ("ENV_GUID", "f36fd7ca-1005-4d72-af92-c62e63cccaaf")
+    test <@ EnvConfig.Get<System.Guid> "ENV_GUID" = Ok expected @>
+
 
 module ``Getting option type`` =
   open Common

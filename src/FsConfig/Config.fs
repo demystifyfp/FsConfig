@@ -60,6 +60,7 @@ module internal Core =
     | Shape.TimeSpan -> wrap TimeSpan.TryParse 
     | Shape.Char -> wrap Char.TryParse 
     | Shape.String -> wrap (fun (s : string) -> (true,s)) 
+    | Shape.Guid -> wrap Guid.TryParse
     | _ -> None
 
   let parseFSharpOption<'T> name value (fsharpOption : IShapeFSharpOption) =
