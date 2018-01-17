@@ -192,6 +192,22 @@ module ``Given required environment variables exists`` =
     setEnvVar ("ENV_GUID", "f36fd7ca-1005-4d72-af92-c62e63cccaaf")
     test <@ EnvConfig.Get<System.Guid> "ENV_GUID" = Ok expected @>
 
+  [<Flags>]
+  type Color =
+  | Red = 0
+  | Blue = 1
+  | Green = 2
+  
+  [<Test>]
+  let ``get Enum should succeed`` () =
+    setEnvVar ("ENV_ENUM_STRING", "Red")
+    setEnvVar ("ENV_ENUM_FLAGS", "Red, Blue")
+    setEnvVar ("ENV_ENUM_INT", "0")
+    let expectedFlagOutput = Color.Red ||| Color.Blue
+    test <@ EnvConfig.Get<Color> "ENV_ENUM_STRING" = Ok Color.Red @>
+    test <@ EnvConfig.Get<Color> "ENV_ENUM_INT" = Ok Color.Red @>
+    test <@ EnvConfig.Get<Color> "ENV_ENUM_FLAGS" = Ok expectedFlagOutput @>
+
 
 module ``Getting option type`` =
   open Common

@@ -109,6 +109,19 @@ module internal Core =
               |> Result.bind (List.rev >> Ok >> wrap)
             | None -> NotSupported "unknown target type" |> Error 
     }
+
+  let parseEnum<'T> name value (enumShape : IShapeEnum) : ConfigParseResult<'T> = 
+    let wrap (p : ConfigParseResult<'a>) =
+      unbox<ConfigParseResult<'T>> p
+    enumShape.Accept {
+      new IEnumVisitor<ConfigParseResult<'T>> with
+        member __.Visit<'T, 'U when 'T : enum<'U>
+                                    and 'T : struct
+                                    and 'T :> ValueType
+                                    and 'T : (new : unit -> 'T)> () = 
+          tryParseWith name value (System.Enum.TryParse<'T>) |> wrap 
+    }
+
   let rec parse<'T> (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) name =
     let value = configReader.GetValue name
     let targetTypeShape = shapeof<'T>
@@ -119,6 +132,10 @@ module internal Core =
       parseFSharpOption<'T> name value fsharpOption
     | Shape.FSharpList fsharpList ->
       parseFSharpList<'T> name value fsharpList
+    | Shape.Enum enumShape ->
+      match value with
+      | None -> NotFound name |> Error
+      | Some v -> parseEnum<'T> name v enumShape
     | _ ->
       match getTryParseFunc<'T> targetTypeShape with
       | Some tryParseFunc -> 
