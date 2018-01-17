@@ -11,6 +11,8 @@ type ConfigParseResult<'T> = Result<'T, ConfigParseError>
 type IConfigNameCanonicalizer = 
   abstract member Canonicalize: string -> string -> string
 
+type FieldNameCanonicalizer = string -> string -> string
+
 [<AttributeUsage(AttributeTargets.Property, AllowMultiple = false)>]
 type CustomNameAttribute(name : string) =
   inherit Attribute ()
@@ -122,12 +124,12 @@ module internal Core =
           tryParseWith name value (System.Enum.TryParse<'T>) |> wrap 
     }
 
-  let rec parse<'T> (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) name =
+  let rec parse<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name =
     let value = configReader.GetValue name
     let targetTypeShape = shapeof<'T>
     match targetTypeShape with
     | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
-      parseFSharpRecord configReader configNameCanonicalizer name shape
+      parseFSharpRecord configReader fieldNameCanonicalizer name shape
     | Shape.FSharpOption fsharpOption -> 
       parseFSharpOption<'T> name value fsharpOption
     | Shape.FSharpList fsharpList ->
@@ -143,7 +145,7 @@ module internal Core =
         | Some v -> tryParseWith name v tryParseFunc
         | None -> NotFound name |> Error
       | None -> NotSupported "unknown target type" |> Error
-  and parseFSharpRecord (configReader : IConfigReader) (configNameCanonicalizer : IConfigNameCanonicalizer) prefix shape =
+  and parseFSharpRecord (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) prefix shape =
     let record = shape.CreateUninitialized()
     shape.Fields
     |> Seq.fold 
@@ -160,12 +162,12 @@ module internal Core =
           let configName = 
             match customHeadAttribute with
             | Some attr -> attr.Name
-            | None -> configNameCanonicalizer.Canonicalize prefix field.Label
+            | None -> fieldNameCanonicalizer prefix field.Label
           
           field.Accept {
             new IWriteMemberVisitor<'RecordType, ConfigParseResult<('RecordType -> 'RecordType) list>> with
               member __.Visit (shape : ShapeWriteMember<'RecordType, 'FieldType>) =
-                match parse<'FieldType> configReader configNameCanonicalizer configName with
+                match parse<'FieldType> configReader fieldNameCanonicalizer configName with
                 | Ok fieldValue -> (fun record -> shape.Inject record fieldValue) :: xs |> Ok
                 | Error e -> Error e
           }

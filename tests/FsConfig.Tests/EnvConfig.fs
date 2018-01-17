@@ -18,10 +18,8 @@ module Common =
   let defaultParamsWithCustomSeparator =
     {EnvConfig.defaultParams with Separator = "-"}
 
-  let lowerCaseConfigNameCanonicalizer = {
-        new IConfigNameCanonicalizer with
-          member __.Canonicalize _ name = name.ToLowerInvariant()
-      }
+  let lowerCaseConfigNameCanonicalizer _ (name : string) = 
+    name.ToLowerInvariant()
   let setEnvVar (key,value) =
     Environment.SetEnvironmentVariable(key,value, EnvironmentVariableTarget.Process)
 
