@@ -63,7 +63,9 @@
   -->
   <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
+    <Compile Include="Common.fs" />
     <Compile Include="EnvConfig.fs" />
+    <Compile Include="AppConfig.fs" />
     <None Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>
@@ -71,6 +73,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Numerics" />
     <ProjectReference Include="..\..\src\FsConfig\FsConfig.fsproj">
       <Name>FsConfig</Name>

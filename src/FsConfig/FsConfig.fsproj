@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Config.fs" />
     <Compile Include="EnvConfig.fs" />
+    <Compile Include="AppConfig.fs" />
     <None Include="Script.fsx" />
     <None Include="paket.references" />
     <None Include="paket.template" />
@@ -63,6 +64,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <Choose>

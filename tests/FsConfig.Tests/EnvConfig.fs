@@ -3,13 +3,8 @@ namespace EnvConfig.Tests
 open System
 open NUnit.Framework
 open FsConfig
+open FsConfig.Tests.Common
 open Swensen.Unquote.Assertions
-open System.ComponentModel
-
-type SampleConfig = {
-  ProcessId : int
-  ProcessName : string
-}
 
 module Common =
   let defaultParamsWithCustomPrefix = 
@@ -17,11 +12,10 @@ module Common =
 
   let defaultParamsWithCustomSeparator =
     {EnvConfig.defaultParams with Separator = "-"}
-
-  let lowerCaseConfigNameCanonicalizer _ (name : string) = 
-    name.ToLowerInvariant()
+  
   let setEnvVar (key,value) =
     Environment.SetEnvironmentVariable(key,value, EnvironmentVariableTarget.Process)
+  
 
 module ``Given required environment variables not exist`` =
   open Common
