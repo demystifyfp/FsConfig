@@ -7,11 +7,6 @@ open FsConfig.Tests.Common
 open Swensen.Unquote.Assertions
 
 module Common =
-  let defaultParamsWithCustomPrefix = 
-    {EnvConfig.defaultParams with Prefix = "MYAPP"}
-
-  let defaultParamsWithCustomSeparator =
-    {EnvConfig.defaultParams with Separator = "-"}
   
   let setEnvVar (key,value) =
     Environment.SetEnvironmentVariable(key,value, EnvironmentVariableTarget.Process)
@@ -35,14 +30,14 @@ module ``Given required environment variables not exist`` =
   [<Test>]
   let ``getRecord with custom prefix should return not found error`` () =
     let result = 
-      EnvConfig.Get<SampleConfig> defaultParamsWithCustomPrefix
+      EnvConfig.Get<CustomPrefixSampleConfig> ()
     let expected = NotFound "MYAPP_PROCESS_ID" |> Error
     test <@ expected = result @>
 
   [<Test>]
   let ``getRecord with custom separator should return not found error`` () =
     let result = 
-      EnvConfig.Get<SampleConfig> defaultParamsWithCustomSeparator
+      EnvConfig.Get<CustomSeparatorSampleConfig> ()
     let expected = NotFound "PROCESS-ID" |> Error
     test <@ expected = result @>
 
@@ -60,7 +55,12 @@ module ``Given required environment variables exists`` =
 
   [<TestFixture>]
   type ``with valid values`` () =
-    let expectedRecord = {ProcessId = 123; ProcessName = "fsconfig.exe"}
+    let expectedRecord : SampleConfig = {ProcessId = 123; ProcessName = "fsconfig.exe"}
+
+    let expectedCustomPrefixRecord : CustomPrefixSampleConfig = 
+      {ProcessId = expectedRecord.ProcessId; ProcessName = expectedRecord.ProcessName}
+    let expectedCustomSeparatorRecord : CustomSeparatorSampleConfig = 
+      {ProcessId = expectedRecord.ProcessId; ProcessName = expectedRecord.ProcessName}
     member __.envVars =
       [
         "PROCESS_ID", expectedRecord.ProcessId.ToString()
@@ -92,11 +92,11 @@ module ``Given required environment variables exists`` =
 
     [<Test>] 
     member __.``getRecord with custom prefix should succeeds`` () =
-      test <@ EnvConfig.Get<SampleConfig> defaultParamsWithCustomPrefix = Ok expectedRecord @>
+      test <@ EnvConfig.Get<CustomPrefixSampleConfig> () = Ok expectedCustomPrefixRecord @>
 
     [<Test>] 
     member __.``getRecord with custom separator should succeeds`` () =
-      test <@ EnvConfig.Get<SampleConfig> defaultParamsWithCustomSeparator = Ok expectedRecord @>
+      test <@ EnvConfig.Get<CustomSeparatorSampleConfig> () = Ok expectedCustomSeparatorRecord @>
 
     [<Test>] 
     member __.``getRecord with custom Config Name Canonicalizer should succeeds`` () =

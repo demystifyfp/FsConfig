@@ -18,6 +18,12 @@ type CustomNameAttribute(name : string) =
   inherit Attribute ()
   member __.Name = name
 
+[<AttributeUsage(AttributeTargets.Class, AllowMultiple = false)>]
+type ConventionAttribute(prefix : string) =
+  inherit Attribute ()
+  member val Prefix = prefix with get,set
+  member val Separator = "" with get, set
+
 
 module internal Core =
 

@@ -35,7 +35,7 @@ module ``Given required app settings exists`` =
 
   [<TestFixture>]
   type ``with valid values`` () =
-    let expectedRecord = {ProcessId = 321; ProcessName = "appconfig.exe"}
+    let expectedRecord : SampleConfig = {ProcessId = 321; ProcessName = "appconfig.exe"}
 
     [<Test>] 
     member __.``getPrimitive should succeeds`` () =
