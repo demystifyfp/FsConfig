@@ -1,5 +1,6 @@
 namespace FsConfig
 open System
+open System.Text.RegularExpressions
 
 type ConfigParseError =
 | BadValue of (string * string)
@@ -33,6 +34,38 @@ module internal Core =
     abstract member GetValue : string -> string option
 
   type TryParse<'a> = string -> bool * 'a
+
+  let getPrefixAndSeparator<'T> defaultPrefix defaultSeparator =
+    let conventionAttribute =
+      typeof<'T>.GetCustomAttributes(typeof<ConventionAttribute>, true)
+      |> Seq.tryHead
+      |> Option.map (fun a -> a :?> ConventionAttribute)
+    match conventionAttribute with
+    | Some attr -> 
+        let prefix = 
+          if (isNull attr.Prefix) then defaultPrefix else Prefix attr.Prefix
+        let separator = 
+          if (String.IsNullOrEmpty(attr.Separator)) then 
+            defaultSeparator 
+          else Separator attr.Separator
+        (prefix,separator)
+    | None -> (defaultPrefix,defaultSeparator)
+
+  let actualPrefix (Prefix customPrefix) (Separator separator) (Prefix prefix) =
+    match (String.IsNullOrEmpty customPrefix, String.IsNullOrEmpty prefix) with
+    | true, true -> ""
+    | true, false -> sprintf "%s%s" prefix separator 
+    | false, true -> sprintf "%s%s" customPrefix separator
+    | false, false -> sprintf "%s%s%s%s" customPrefix separator prefix separator
+
+  let private fieldNameRegex : Regex =
+    Regex("([^A-Z]+|[A-Z][^A-Z]+|[A-Z]+)", RegexOptions.Compiled)
+
+  let fieldNameSubstrings fieldName =
+    fieldNameRegex.Matches fieldName
+    |> Seq.cast
+    |> Seq.map (fun (m : Match) -> m.Value)
+    |> Seq.toArray
 
   let tryParseWith name value tryParseFunc  = 
     match tryParseFunc value with
