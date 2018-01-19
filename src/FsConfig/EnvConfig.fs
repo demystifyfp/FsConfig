@@ -33,8 +33,9 @@ type EnvConfig =
   static member private defaultFieldNameCanonicalizer =
     EnvConfig.fieldNameCanonicalizer EnvConfig.defaultPrefix EnvConfig.defaultSeparator
 
-  static member Get<'T> (envVarName : string) = 
+  static member Get<'T when 'T :> IConvertible> (envVarName : string) = 
     parse<'T> EnvConfig.configReader EnvConfig.defaultFieldNameCanonicalizer envVarName
+
   static member Get<'T when 'T : not struct> () =
     let fieldNameCanonicalizer = 
       let (prefix, separator) = 

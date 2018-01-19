@@ -26,7 +26,7 @@ type AppConfig =
     AppConfig.fieldNameCanonicalizer AppConfig.defaultPrefix AppConfig.defaultSeparator
 
 
-  static member Get<'T> (appSettingsName : string) = 
+  static member Get<'T when 'T :> IConvertible> (appSettingsName : string) = 
     parse<'T> AppConfig.configReader AppConfig.defaultFieldNameCanonicalizer appSettingsName
 
   static member Get<'T when 'T : not struct> () =

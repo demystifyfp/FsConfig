@@ -165,24 +165,25 @@ module ``Given required environment variables exists`` =
     let expected = DateTime.Parse "5/01/2008 14:57:32.80 -07:00"
     test <@ EnvConfig.Get<DateTime> "ENV_DATE_TIME" = Ok expected @>
 
-
-  [<Test>]
-  let ``get datetime offset should succeed`` () =
-    setEnvVar ("ENV_DATE_TIME_OFFSET", "5/01/2008 14:57:32.80 -07:00")
-    let expected = DateTimeOffset.Parse "5/01/2008 14:57:32.80 -07:00"
-    test <@ EnvConfig.Get<DateTimeOffset> "ENV_DATE_TIME_OFFSET" = Ok expected @>
   
-  [<Test>]
-  let ``get time span should succeed`` () =
-    setEnvVar ("ENV_TIME_SPAN", "99.23:59:59.9999999")
-    let expected = TimeSpan.Parse "99.23:59:59.9999999"
-    test <@ EnvConfig.Get<TimeSpan> "ENV_TIME_SPAN" = Ok expected @>
+  type NonIConvertibleConfig = {
+    DateTimeOffset : DateTimeOffset
+    TimeSpan : TimeSpan
+    Guid : Guid
+  }
+
+  let expectedNonIConvertibleConfig = {
+    DateTimeOffset = DateTimeOffset.Parse "5/01/2008 14:57:32.80 -07:00"
+    TimeSpan = TimeSpan.Parse "99.23:59:59.9999999"
+    Guid = System.Guid.Parse("f36fd7ca-1005-4d72-af92-c62e63cccaaf")
+  }
 
   [<Test>]
-  let ``get Guid should succeed`` () =
-    let expected = System.Guid.Parse("f36fd7ca-1005-4d72-af92-c62e63cccaaf")
-    setEnvVar ("ENV_GUID", "f36fd7ca-1005-4d72-af92-c62e63cccaaf")
-    test <@ EnvConfig.Get<System.Guid> "ENV_GUID" = Ok expected @>
+  let ``get datetime offset, time span and Guid should succeed`` () =
+    setEnvVar ("DATE_TIME_OFFSET", "5/01/2008 14:57:32.80 -07:00")
+    setEnvVar ("TIME_SPAN", "99.23:59:59.9999999")
+    setEnvVar ("GUID", "f36fd7ca-1005-4d72-af92-c62e63cccaaf")
+    test <@ EnvConfig.Get<NonIConvertibleConfig> () = Ok expectedNonIConvertibleConfig @>
 
   [<Flags>]
   type Color =
@@ -204,22 +205,27 @@ module ``Given required environment variables exists`` =
 module ``Getting option type`` =
   open Common
 
+  type OptionConfig = {
+    IntOption : int option
+  }
+
   [<Test>]
   let ``return none if environment variable not exists`` () =
-    test <@ EnvConfig.Get<int option> "ENV_INT_OPTION_NONE" = Ok None @>
+    setEnvVar ("INT_OPTION", null)
+    test <@ EnvConfig.Get<OptionConfig> () = Ok {IntOption = None} @>
 
   [<Test>]
   let ``return some of value if environment variable exists`` () =
-    setEnvVar ("ENV_INT_OPTION_SOME", "42")
-    test <@ EnvConfig.Get<int option> "ENV_INT_OPTION_SOME" = Ok (Some 42) @>
+    setEnvVar ("INT_OPTION", "42")
+    test <@ EnvConfig.Get<OptionConfig> () = Ok {IntOption = Some 42} @>
 
 
   [<Test>]
   let ``return bad value error if environment variable exists with wrong format`` () =
-    setEnvVar ("ENV_INT_OPTION_BAD", "foo")
-    test <@ EnvConfig.Get<int option> "ENV_INT_OPTION_BAD" = Error (BadValue ("ENV_INT_OPTION_BAD", "foo")) @>
+    setEnvVar ("INT_OPTION", "foo")
+    test <@ EnvConfig.Get<OptionConfig> () = Error (BadValue ("INT_OPTION", "foo")) @>
 
-module ``Getting record with option type`` =
+module ``Getting record with mutlitple option type fields`` =
   open Common
 
   type Config = {
@@ -237,31 +243,23 @@ module ``Getting record with option type`` =
 module ``Getting list type`` =
   open Common
 
-  [<Test>]
-  let ``return empty list if environment variable not exists`` () =
-    test <@ EnvConfig.Get<int list> "ENV_INT_LIST_EMPTY" = Ok [] @>
-
-  [<Test>]
-  let ``return singleton list if environment variable exist with one value`` () =
-    setEnvVar ("ENV_INT_LIST_SINGLETON", "42")
-    test <@ EnvConfig.Get<int list> "ENV_INT_LIST_SINGLETON" = Ok [42] @>
-
-  [<Test>]
-  let ``return list if environment variable exist with mutiple comma separated values`` () =
-    setEnvVar ("ENV_INT_LIST_SINGLETON", "42, 43,44")
-    test <@ EnvConfig.Get<int list> "ENV_INT_LIST_SINGLETON" = Ok [42;43;44] @>
-
-module ``Getting record with list type`` =
-  open Common
-
-  type Config = {
-    MagicNumbers : int list
+  type IntListConfig = {
+    IntList : int list
   }
 
   [<Test>]
-  let ``return record with corresponding option value`` () =
-    setEnvVar ("MAGIC_NUMBERS", "42, 99, 101")
-    test <@ EnvConfig.Get<Config> () = Ok ({MagicNumbers = [42;99;101]}) @>
+  let ``return empty list if environment variable not exists`` () =
+    test <@ EnvConfig.Get<IntListConfig> () = Ok {IntList = []} @>
+
+  [<Test>]
+  let ``return singleton list if environment variable exist with one value`` () =
+    setEnvVar ("INT_LIST", "42")
+    test <@ EnvConfig.Get<IntListConfig> () = Ok {IntList = [42]} @>
+
+  [<Test>]
+  let ``return list if environment variable exist with mutiple comma separated values`` () =
+    setEnvVar ("INT_LIST", "42, 43,44")
+    test <@ EnvConfig.Get<IntListConfig> () = Ok {IntList = [42;43;44]} @>
 
 
 module ``Getting record with record type`` =
