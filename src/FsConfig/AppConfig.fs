@@ -11,7 +11,7 @@ type AppConfig =
         if v = null then None else Some v
   }
 
-  static member private fieldNameCanonicalizer = sprintf "%s%s"
+  static member private fieldNameCanonicalizer (Prefix prefix) name = sprintf "%s%s" prefix name
 
 
   static member Get<'T> (appSettingsName : string) = 

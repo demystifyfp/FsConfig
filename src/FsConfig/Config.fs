@@ -6,12 +6,12 @@ type ConfigParseError =
 | NotFound of string
 | NotSupported of string
 
+type Prefix = Prefix of string
+type Separator = Separator of string
+
 type ConfigParseResult<'T> = Result<'T, ConfigParseError>
 
-type IConfigNameCanonicalizer = 
-  abstract member Canonicalize: string -> string -> string
-
-type FieldNameCanonicalizer = string -> string -> string
+type FieldNameCanonicalizer = Prefix -> string -> string
 
 [<AttributeUsage(AttributeTargets.Property, AllowMultiple = false)>]
 type CustomNameAttribute(name : string) =
@@ -31,12 +31,6 @@ module internal Core =
 
   type IConfigReader =
     abstract member GetValue : string -> string option
-
-  [<NoEquality;NoComparison>]
-  type ParseRecordConfig = {
-    ConfigReader : IConfigReader
-    ConfigNameCanonicalizer : IConfigNameCanonicalizer
-  }
 
   type TryParse<'a> = string -> bool * 'a
 
@@ -135,7 +129,7 @@ module internal Core =
     let targetTypeShape = shapeof<'T>
     match targetTypeShape with
     | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
-      parseFSharpRecord configReader fieldNameCanonicalizer name shape
+      parseFSharpRecord configReader fieldNameCanonicalizer (Prefix name) shape
     | Shape.FSharpOption fsharpOption -> 
       parseFSharpOption<'T> name value fsharpOption
     | Shape.FSharpList fsharpList ->

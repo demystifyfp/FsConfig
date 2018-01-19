@@ -9,8 +9,6 @@ type EnvConfigParams = {
   Separator : string
 }
 
-
-
 type EnvConfig =
   static member private configReader : IConfigReader = {
     new IConfigReader with
@@ -21,8 +19,8 @@ type EnvConfig =
   static member private envVarNameRegEx : Regex =
     Regex("([^A-Z]+|[A-Z][^A-Z]+|[A-Z]+)", RegexOptions.Compiled)
 
-  static member private fieldNameCanonicalizer customPrefix separator : FieldNameCanonicalizer = 
-    fun prefix name -> 
+  static member private fieldNameCanonicalizer (Prefix customPrefix) (Separator separator) : FieldNameCanonicalizer = 
+    fun (Prefix prefix) name -> 
       let actualPrefix =
         match (String.IsNullOrEmpty customPrefix, String.IsNullOrEmpty prefix) with
         | true, true -> ""
@@ -36,8 +34,8 @@ type EnvConfig =
         |> Seq.toArray
       String.Join(separator, subStrings)
       |> sprintf "%s%s" actualPrefix
-  static member private defaultPrefix = ""
-  static member private defaultSeparator = "_"
+  static member private defaultPrefix = Prefix ""
+  static member private defaultSeparator = Separator "_"
 
 
   static member private defaultFieldNameCanonicalizer =
@@ -54,11 +52,13 @@ type EnvConfig =
     let fieldNameCanonicalizer = 
       match conventionAttribute with
       | Some attr -> 
-          let prefix = if (isNull attr.Prefix) then "" else attr.Prefix
+          let prefix = 
+            if (isNull attr.Prefix) then "" else attr.Prefix
+            |> Prefix
           let separator = 
             if (String.IsNullOrEmpty(attr.Separator)) then 
-              EnvConfig.defaultSeparator
-            else attr.Separator
+              EnvConfig.defaultSeparator 
+            else Separator attr.Separator
           EnvConfig.fieldNameCanonicalizer prefix separator
       | None -> EnvConfig.defaultFieldNameCanonicalizer
 
