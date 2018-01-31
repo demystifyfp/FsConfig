@@ -165,19 +165,6 @@ module ``Given required environment variables exists`` =
     let expected = DateTime.Parse "5/01/2008 14:57:32.80 -07:00"
     test <@ EnvConfig.Get<DateTime> "ENV_DATE_TIME" = Ok expected @>
 
-  
-  type NonIConvertibleConfig = {
-    DateTimeOffset : DateTimeOffset
-    TimeSpan : TimeSpan
-    Guid : Guid
-  }
-
-  let expectedNonIConvertibleConfig = {
-    DateTimeOffset = DateTimeOffset.Parse "5/01/2008 14:57:32.80 -07:00"
-    TimeSpan = TimeSpan.Parse "99.23:59:59.9999999"
-    Guid = System.Guid.Parse("f36fd7ca-1005-4d72-af92-c62e63cccaaf")
-  }
-
   [<Test>]
   let ``get datetime offset, time span and Guid should succeed`` () =
     setEnvVar ("DATE_TIME_OFFSET", "5/01/2008 14:57:32.80 -07:00")
@@ -185,12 +172,6 @@ module ``Given required environment variables exists`` =
     setEnvVar ("GUID", "f36fd7ca-1005-4d72-af92-c62e63cccaaf")
     test <@ EnvConfig.Get<NonIConvertibleConfig> () = Ok expectedNonIConvertibleConfig @>
 
-  [<Flags>]
-  type Color =
-  | Red = 0
-  | Blue = 1
-  | Green = 2
-  
   [<Test>]
   let ``get Enum should succeed`` () =
     setEnvVar ("ENV_ENUM_STRING", "Red")
@@ -264,17 +245,6 @@ module ``Getting list type`` =
 
 module ``Getting record with record type`` =
   open Common
-
-  type AwsConfig = {
-    AccessKeyId : string
-    DefaultRegion : string
-    SecretAccessKey : string
-  }
-
-  type Config = {
-    MagicNumber : int
-    Aws : AwsConfig
-  }
 
   [<Test>]
   let ``return record with corresponding option value`` () =
