@@ -28,7 +28,7 @@ type ConventionAttribute(prefix : string) =
 
 module internal Core =
 
-  open TypeShape
+  open TypeShape.Core
 
   type IConfigReader =
     abstract member GetValue : string -> string option
