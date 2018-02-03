@@ -247,14 +247,14 @@ module ``Getting record with record type`` =
   open Common
 
   [<Test>]
-  let ``return record with corresponding option value`` () =
+  let ``return record with corresponding record value`` () =
     setEnvVar ("MAGIC_NUMBER", "42")
     setEnvVar ("AWS_ACCESS_KEY_ID", "Id-123")
     setEnvVar ("AWS_SECRET_ACCESS_KEY", "secret123")
     setEnvVar ("AWS_DEFAULT_REGION", "us-east-1")
     let expected = 
       {
-        MagicNumber = 42
+        Config.MagicNumber = 42
         Aws = 
         {
           AccessKeyId = "Id-123"
@@ -263,6 +263,28 @@ module ``Getting record with record type`` =
         }
       } |> Ok
     test <@ EnvConfig.Get<Config> () = expected @>
+
+
+module ``Getting record with custom prefix and record type`` =
+  open Common
+
+  [<Test>]
+  let ``return record with corresponding record value`` () =
+    setEnvVar ("MYAPP_MAGIC_NUMBER", "42")
+    setEnvVar ("MYAPP_AWS_ACCESS_KEY_ID", "Id-123")
+    setEnvVar ("MYAPP_AWS_SECRET_ACCESS_KEY", "secret123")
+    setEnvVar ("MYAPP_AWS_DEFAULT_REGION", "us-east-1")
+    let expected = 
+      {
+        ConfigWithCustomPrefix.MagicNumber = 42
+        Aws = 
+        {
+          AccessKeyId = "Id-123"
+          DefaultRegion = "us-east-1"
+          SecretAccessKey = "secret123"
+        }
+      } |> Ok
+    test <@ EnvConfig.Get<ConfigWithCustomPrefix> () = expected @>
 
 
  module ``Getting record with custom name properties`` =

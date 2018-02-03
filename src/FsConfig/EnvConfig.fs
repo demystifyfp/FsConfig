@@ -20,7 +20,7 @@ type EnvConfig =
   static member private fieldNameCanonicalizer customPrefix (Separator separator) : FieldNameCanonicalizer = 
     fun prefix name -> 
       let actualPrefix =
-        actualPrefix customPrefix (Separator separator) prefix
+        findActualPrefix customPrefix (Separator separator) prefix
       let subStrings =
         fieldNameSubstrings name
         |> Array.map (fun v -> v.ToUpperInvariant())

@@ -62,3 +62,9 @@ module Common =
     MagicNumber : int
     Aws : AwsConfig
   }
+
+  [<Convention("MYAPP")>]
+  type ConfigWithCustomPrefix = {
+    MagicNumber : int
+    Aws : AwsConfig
+  }

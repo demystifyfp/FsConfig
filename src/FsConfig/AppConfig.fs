@@ -18,7 +18,7 @@ type AppConfig =
   static member private fieldNameCanonicalizer customPrefix (Separator separator) : FieldNameCanonicalizer = 
     fun prefix name -> 
       let actualPrefix =
-        actualPrefix customPrefix (Separator separator) prefix
+        findActualPrefix customPrefix (Separator separator) prefix
       String.Join(separator, (fieldNameSubstrings name))
       |> sprintf "%s%s" actualPrefix
 

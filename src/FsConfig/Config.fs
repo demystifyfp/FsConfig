@@ -51,12 +51,11 @@ module internal Core =
         (prefix,separator)
     | None -> (defaultPrefix,defaultSeparator)
 
-  let actualPrefix (Prefix customPrefix) (Separator separator) (Prefix prefix) =
+  let findActualPrefix (Prefix customPrefix) (Separator separator) (Prefix prefix) =
     match (String.IsNullOrEmpty customPrefix, String.IsNullOrEmpty prefix) with
     | true, true -> ""
-    | true, false -> sprintf "%s%s" prefix separator 
+    | true, false | false, false  -> sprintf "%s%s" prefix separator 
     | false, true -> sprintf "%s%s" customPrefix separator
-    | false, false -> sprintf "%s%s%s%s" customPrefix separator prefix separator
 
   let private fieldNameRegex : Regex =
     Regex("([^A-Z]+|[A-Z][^A-Z]+|[A-Z]+)", RegexOptions.Compiled)

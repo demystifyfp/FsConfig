@@ -144,7 +144,7 @@ module ``Getting record with record type`` =
   let ``return record with corresponding option value`` () =
     let expected = 
       {
-        MagicNumber = 42
+        Config.MagicNumber = 42
         Aws = 
         {
           AccessKeyId = "Id-123"
