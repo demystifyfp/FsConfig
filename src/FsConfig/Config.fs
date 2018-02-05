@@ -30,6 +30,10 @@ module internal Core =
 
   open TypeShape.Core
 
+  let notSupported name =
+    sprintf """The target type of "%s" is currently not supported""" name
+    |> NotSupported
+
   type IConfigReader =
     abstract member GetValue : string -> string option
 
@@ -112,7 +116,7 @@ module internal Core =
             | Some tryParseFunc -> 
               tryParseWith name v tryParseFunc 
               |> Result.bind (Some >> Ok >> wrap) 
-            | None -> NotSupported "unknown target type" |> Error 
+            | None -> notSupported name |> Error 
     }
 
   let parseListReducer name tryParseFunc acc element = 
@@ -141,7 +145,7 @@ module internal Core =
               |> Array.filter (String.IsNullOrWhiteSpace >> not)
               |> Array.fold (parseListReducer name tryParseFunc) (Ok [])
               |> Result.bind (List.rev >> Ok >> wrap)
-            | None -> NotSupported "unknown target type" |> Error 
+            | None -> notSupported name |> Error 
     }
 
   let parseEnum<'T> name value (enumShape : IShapeEnum) : ConfigParseResult<'T> = 
@@ -176,7 +180,7 @@ module internal Core =
         match value with
         | Some v -> tryParseWith name v tryParseFunc
         | None -> NotFound name |> Error
-      | None -> NotSupported "unknown target type" |> Error
+      | None -> notSupported name |> Error
   and parseFSharpRecord (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) prefix shape =
     let record = shape.CreateUninitialized()
     shape.Fields

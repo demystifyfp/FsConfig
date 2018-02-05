@@ -3,11 +3,6 @@ namespace FsConfig
 open FsConfig.Core
 open System
 
-type EnvConfigParams = {
-  Prefix : string
-  Separator : string
-}
-
 type EnvConfig =
   static member private configReader : IConfigReader = {
     new IConfigReader with
@@ -15,8 +10,6 @@ type EnvConfig =
         let v = Environment.GetEnvironmentVariable name
         if v = null then None else Some v
   }
-  
-
   static member private fieldNameCanonicalizer customPrefix (Separator separator) : FieldNameCanonicalizer = 
     fun prefix name -> 
       let actualPrefix =
@@ -28,8 +21,6 @@ type EnvConfig =
       |> sprintf "%s%s" actualPrefix
   static member private defaultPrefix = Prefix ""
   static member private defaultSeparator = Separator "_"
-
-
   static member private defaultFieldNameCanonicalizer =
     EnvConfig.fieldNameCanonicalizer EnvConfig.defaultPrefix EnvConfig.defaultSeparator
 
