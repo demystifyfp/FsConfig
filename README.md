@@ -2,6 +2,8 @@
 
 FsConfig is a F# library for reading configuration data from environment variables and AppSettings with type safety
 
+[![Nuget](https://img.shields.io/nuget/dt/FsConfig.svg)](https://www.nuget.org/packages/FsConfig)
+
 ## Why FsConfig?
 
 To understand FsConfig, let's have a look at an use case from the [FsTweet](https://github.com/demystifyfp/FsTweet) application.
