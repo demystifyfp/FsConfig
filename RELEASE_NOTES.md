@@ -1,3 +1,6 @@
+#### 0.0.next
+* Add field level list separator character attribute
+
 #### 0.0.4 - February 5 2018
 * Improves NotSupported error message
 
