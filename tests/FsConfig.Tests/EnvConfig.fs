@@ -11,6 +11,8 @@ module Common =
   let setEnvVar (key,value) =
     Environment.SetEnvironmentVariable(key,value, EnvironmentVariableTarget.Process)
   
+  let getEnvVar key =
+    Environment.GetEnvironmentVariable(key,EnvironmentVariableTarget.Process)
 
 module ``Given required environment variables not exist`` =
   open Common
@@ -238,10 +240,20 @@ module ``Getting list type`` =
     test <@ EnvConfig.Get<IntListConfig> () = Ok {IntList = [42]} @>
 
   [<Test>]
+  let ``return singleton list if environment variable exist with one value if custom list separator set`` () =
+    setEnvVar ("INT_LIST_UP", "43")
+    test <@ EnvConfig.Get<IntListUsingPipesConfig> () = Ok {IntListUp = [43]} @>
+
+
+  [<Test>]
   let ``return list if environment variable exist with mutiple comma separated values`` () =
     setEnvVar ("INT_LIST", "42, 43,44")
     test <@ EnvConfig.Get<IntListConfig> () = Ok {IntList = [42;43;44]} @>
 
+  [<Test>]
+  let ``return list if environment variable exist with mutiple | separated values`` () =
+    setEnvVar ("INT_LIST_UP", "42|43|44")
+    test <@ EnvConfig.Get<IntListUsingPipesConfig> () = Ok {IntListUp = [42;43;44]} @>
 
 module ``Getting record with record type`` =
   open Common

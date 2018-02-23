@@ -26,6 +26,22 @@ module Common =
     ProcessName : string
   }
 
+  [<Convention("MYENV")>]
+  type CustomListSeparatorSampleConfig = {
+    ProcessNames : string list
+    [<ListSeparator(';')>]
+    ProcessIds : uint16 list
+    [<ListSeparator('|')>]
+    PipedFlow : int list    
+  }
+
+
+  type IntListUsingPipesConfig = {
+    [<ListSeparator('|')>]
+    IntListUp : int list
+  }
+
+
   type NonIConvertibleConfig = {
     DateTimeOffset : DateTimeOffset
     TimeSpan : TimeSpan

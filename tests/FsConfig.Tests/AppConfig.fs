@@ -41,7 +41,9 @@ module ``Given required app settings exists`` =
       {ProcessId = expectedRecord.ProcessId; ProcessName = expectedRecord.ProcessName}
     let expectedCustomSeparatorRecord : CustomSeparatorSampleConfig = 
       {ProcessId = expectedRecord.ProcessId; ProcessName = expectedRecord.ProcessName}
-
+    let expectedCustomListSeparatorRecord : CustomListSeparatorSampleConfig =
+      {ProcessNames = ["conhost.exe";"gitter.exe"] ; ProcessIds=[4700us;15680us];PipedFlow = [4700;15680;-1]}
+    
     [<Test>] 
     member __.``getPrimitive should succeeds`` () =
       test <@ AppConfig.Get<int> "ProcessId" = Ok 321   @>
@@ -62,7 +64,14 @@ module ``Given required app settings exists`` =
     member __.``getRecord with custom Config Name Canonicalizer should succeeds`` () =
       test <@ AppConfig.Get<SampleConfig> lowerCaseConfigNameCanonicalizer = Ok expectedRecord @>
 
-  
+    [<Test>] 
+    member __.``getRecord with lists using custom separators should succeed`` () =
+      test <@ AppConfig.Get<CustomListSeparatorSampleConfig> () = Ok expectedCustomListSeparatorRecord @>
+
+    [<Test>]
+    member __.``return list if app setting exists with mutiple pipe separated values`` () =
+      test <@ AppConfig.Get<IntListUsingPipesConfig> () = Ok {IntListUp = [42;43;44]} @>
+
   [<Test>]
   let ``get bool should succeed`` () =
     test <@ AppConfig.Get<bool> "Bool1" = Ok true @>
@@ -114,6 +123,7 @@ module ``Given required app settings exists`` =
     test <@ AppConfig.Get<Color> "ENUM_STRING" = Ok Color.Red @>
     test <@ AppConfig.Get<Color> "ENUM_INT" = Ok Color.Red @>
     test <@ AppConfig.Get<Color> "ENUM_FLAGS" = Ok expectedFlagOutput @>
+
 
 
 module ``Getting option type`` =
