@@ -132,6 +132,39 @@ type Config = {
 
 and then pass the value `8084,8085,8080` using the environment variable `PORT`.
 
+The default separator for the list can be changed if needed using the `ListSeparator` attribute.
+
+```fsharp
+  [<Convention("MYENV")>]
+  type CustomListSeparatorSampleConfig = {
+    ProcessNames : string list
+    [<ListSeparator(';')>]
+    ProcessIds : uint16 list
+    [<ListSeparator('|')>]
+    PipedFlow : int list    
+  }
+  ```
+
+> With this configuration declaration, FSConfig would be able to read the following entries from App.settings.
+```xml
+  <add key="MYENVProcessNames" value="conhost.exe,gitter.exe"/>
+  <add key="MYENVProcessIds" value="4700;15680"/>
+  <add key="MYENVPipedFlow" value="4700|15680|-1" />
+```
+
+A definition similar to the one shown below will allow parsing of standalone lists.
+```fsharp
+  type IntListUsingSemiColonsConfig = {
+    [<ListSeparator(';')>]
+    IntListUp : int list
+  }
+```
+
+> E.g. an environment containing
+```ini
+INT_LIST_UP=42;43;44 
+```
+
 ### Record Type
 
 As shown in the initial example, FsConfig allows us to group similar configuration into a record type.

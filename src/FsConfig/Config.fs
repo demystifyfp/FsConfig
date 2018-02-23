@@ -10,6 +10,9 @@ type ConfigParseError =
 type Prefix = Prefix of string
 type Separator = Separator of string
 
+type SplitCharacter (?splitCharacter) =
+  member val Value = defaultArg splitCharacter ','
+
 type ConfigParseResult<'T> = Result<'T, ConfigParseError>
 
 type FieldNameCanonicalizer = Prefix -> string -> string
@@ -18,6 +21,11 @@ type FieldNameCanonicalizer = Prefix -> string -> string
 type CustomNameAttribute(name : string) =
   inherit Attribute ()
   member __.Name = name
+
+[<AttributeUsage(AttributeTargets.Property, AllowMultiple = false)>]
+type ListSeparatorAttribute(splitCharacter : char) =
+  inherit Attribute ()
+  member __.SplitCharacter = SplitCharacter(splitCharacter)
 
 [<AttributeUsage(AttributeTargets.Class, AllowMultiple = false)>]
 type ConventionAttribute(prefix : string) =
@@ -127,7 +135,7 @@ module internal Core =
           |> Result.map (fun v -> v :: xs)
         )
 
-  let parseFSharpList<'T> name value (fsharpList: IShapeFSharpList) =
+  let parseFSharpList<'T> name value (fsharpList: IShapeFSharpList) (splitCharacter:SplitCharacter) =
     let wrap (p : ConfigParseResult<'a>) =
       unbox<ConfigParseResult<'T>> p
     fsharpList.Accept {
@@ -140,7 +148,7 @@ module internal Core =
           | Some (v : string) -> 
             match getTryParseFunc<'t> fsharpList.Element with
             | Some tryParseFunc -> 
-              v.Split(',') 
+              v.Split(splitCharacter.Value) 
               |> Array.map (fun s -> s.Trim())
               |> Array.filter (String.IsNullOrWhiteSpace >> not)
               |> Array.fold (parseListReducer name tryParseFunc) (Ok [])
@@ -158,9 +166,9 @@ module internal Core =
                                     and 'T :> ValueType
                                     and 'T : (new : unit -> 'T)> () = 
           tryParseWith name value (System.Enum.TryParse<'T>) |> wrap 
-    }
+    }  
 
-  let rec parse<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name =
+  let rec parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name splitCharacter =
     let value = configReader.GetValue name
     let targetTypeShape = shapeof<'T>
     match targetTypeShape with
@@ -169,7 +177,7 @@ module internal Core =
     | Shape.FSharpOption fsharpOption -> 
       parseFSharpOption<'T> name value fsharpOption
     | Shape.FSharpList fsharpList ->
-      parseFSharpList<'T> name value fsharpList
+      parseFSharpList<'T> name value fsharpList splitCharacter
     | Shape.Enum enumShape ->
       match value with
       | None -> NotFound name |> Error
@@ -199,13 +207,23 @@ module internal Core =
             match customHeadAttribute with
             | Some attr -> attr.Name
             | None -> fieldNameCanonicalizer prefix field.Label
-          
+
+          let splitCharacter = 
+            field.MemberInfo.GetCustomAttributes(typeof<ListSeparatorAttribute>, true)
+            |> Seq.tryHead
+            |> Option.map (fun sc -> sc :?> ListSeparatorAttribute)
+            |> function None ->SplitCharacter() | Some c -> c.SplitCharacter
+
+
           field.Accept {
             new IWriteMemberVisitor<'RecordType, ConfigParseResult<('RecordType -> 'RecordType) list>> with
               member __.Visit (shape : ShapeWriteMember<'RecordType, 'FieldType>) =
-                match parse<'FieldType> configReader fieldNameCanonicalizer configName with
+                match parseInternal<'FieldType> configReader fieldNameCanonicalizer configName splitCharacter with
                 | Ok fieldValue -> (fun record -> shape.Inject record fieldValue) :: xs |> Ok
                 | Error e -> Error e
           }
        ) (Ok []) 
     |> Result.map (List.fold (fun acc f -> f acc) record)
+
+  let parse<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name =
+    parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name (SplitCharacter())
