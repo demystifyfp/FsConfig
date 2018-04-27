@@ -1,3 +1,6 @@
+#### 0.0.6 - April 27, 2018
+* Relax FSharp Core Version Constraint
+
 #### 0.0.5 - February 23 2018
 * Adds field level list separator character attribute contributed by @mtnrbq
 
