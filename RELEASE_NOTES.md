@@ -1,3 +1,7 @@
+#### 1.0.0 - April 28, 2018
+* Adds Dot Net Core 2.0 Support
+*  **Breaking Change** - AppConfig is no longer supported due to new dot core app config file format change.
+
 #### 1.0.0-beta1 - April 28, 2018
 * Adds Dot Net Core 2.0 Support
 * **Breaking Change** - AppConfig is no longer supported.
