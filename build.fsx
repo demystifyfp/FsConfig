@@ -7,10 +7,8 @@ open Fake
 open Fake.Git
 open Fake.AssemblyInfoFile
 open Fake.ReleaseNotesHelper
-open Fake.UserInputHelper
 
 open System
-open System.IO
 open System.Diagnostics
 
 // --------------------------------------------------------------------------------------
@@ -47,8 +45,7 @@ let solutionFile  = "FsConfig.sln"
 // Default target configuration
 let configuration = "Release"
 
-// Pattern specifying assemblies to be tested using NUnit
-let testAssemblies = "tests/**/bin" </> configuration </> "*Tests*.dll"
+let testProjects = "tests/*.Tests/*.??proj"
 
 // Git configuration (used for publishing documentation in gh-pages branch)
 // The profile where the project is posted
@@ -131,6 +128,10 @@ Target "Clean" (fun _ ->
     CleanDirs ["bin"; "temp"; "docs"]
 )
 
+Target "Restore" (fun _ ->
+    DotNetCli.Restore id
+)
+
 // --------------------------------------------------------------------------------------
 // Build library & test project
 
@@ -142,14 +143,11 @@ Target "Build" (fun _ ->
 
 // --------------------------------------------------------------------------------------
 // Run the unit tests using test runner
+    
 
 Target "RunTests" (fun _ ->
-    !! testAssemblies
-    |> NUnit (fun p ->
-        { p with
-            DisableShadowCopy = true
-            TimeOut = TimeSpan.FromMinutes 20.
-            OutputFile = "TestResults.xml" })
+    for proj in !! testProjects do
+        DotNetCli.Test (fun c -> { c with Project = proj })
 )
 
 
@@ -346,6 +344,10 @@ Target "BuildPackage" DoNothing
 
 Target "All" DoNothing
 
+"Clean"
+  ==> "Restore"
+  ==> "RunTests"
+
 "AssemblyInfo"
   ==> "Build"
   ==> "CopyBinaries"
@@ -364,6 +366,7 @@ Target "All" DoNothing
   ==> "KeepRunning"
 
 "Clean"
+  ==> "Restore"
   ==> "Release"
 
 "BuildPackage"

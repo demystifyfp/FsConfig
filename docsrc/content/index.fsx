@@ -317,8 +317,8 @@ EnvConfig.Get<decimal> "MY_APP_INITIAL_BALANCE" // Result<decimal, ConfigParseEr
 
 (**
 
-appSettings
-===========
+appSettings (Only Supported in V0.0.6 or below)
+===============================================
 
 Are you using `appSettings` in (either `web.config` or `App.config`) to manage your configuration settings? FsConfig supports that too!
 
