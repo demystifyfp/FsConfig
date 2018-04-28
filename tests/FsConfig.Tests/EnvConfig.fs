@@ -74,13 +74,13 @@ module ``Given required environment variables exists`` =
         "processid",expectedRecord.ProcessId.ToString()
         "processname", expectedRecord.ProcessName
       ]
-    [<TestFixtureSetUp>]
-    member this.testFixtureSetUp () =
+    [<OneTimeSetUpAttribute>]
+    member this.oneTimeSetUp () =
       this.envVars
       |> List.iter setEnvVar
         
-    [<TestFixtureTearDown>]
-    member this.testFixtureTearDown () =
+    [<OneTimeTearDownAttribute>]
+    member this.oneTimeTearDown () =
       this.envVars
       |> List.iter (fun (k,_) -> setEnvVar(k,null))
 

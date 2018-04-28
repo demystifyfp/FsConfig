@@ -1,3 +1,7 @@
+#### 1.0.0-beta1 - April 28, 2018
+* Adds Dot Net Core 2.0 Support
+* **Breaking Change** - AppConfig is no longer supported.
+
 #### 0.0.6 - April 27, 2018
 * Relax FSharp Core Version Constraint
 
