@@ -34,6 +34,11 @@ type ConventionAttribute(prefix : string) =
   member val Separator = "" with get, set
 
 
+
+type IConfigReader =
+  abstract member GetValue : string -> string option
+
+
 module internal Core =
 
   open TypeShape.Core
@@ -41,9 +46,6 @@ module internal Core =
   let notSupported name =
     sprintf """The target type of "%s" is currently not supported""" name
     |> NotSupported
-
-  type IConfigReader =
-    abstract member GetValue : string -> string option
 
   type TryParse<'a> = string -> bool * 'a
 
@@ -225,5 +227,9 @@ module internal Core =
        ) (Ok []) 
     |> Result.map (List.fold (fun acc f -> f acc) record)
 
+[<AutoOpen>]
+module Config =
+  open Core
+
   let parse<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name =
-    parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name (SplitCharacter())
+    parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name (SplitCharacter())  

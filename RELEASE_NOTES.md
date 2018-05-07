@@ -1,3 +1,6 @@
+#### 1.1.0 - May 7, 2018
+* Makes parse logic public to use it in other contexts. 
+
 #### 1.0.0 - April 28, 2018
 * Adds Dot Net Core 2.0 Support
 *  **Breaking Change** - AppConfig is no longer supported due to new dot core app config file format change.
