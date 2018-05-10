@@ -143,6 +143,26 @@ type Config = {
 }
 ```
 
+Discriminated Union Type
+-----------------
+
+FsConfig supports Discriminated Union Types that has cases alone. 
+
+*)
+
+type Color =
+| Red
+| Green
+| Blue 
+
+type Config = {
+  ConsoleColor : Color
+}
+
+(*
+
+> With this configuration declaration, FsConfig read the environment variable `CONSOLE_COLOR` and populates the `ConsoleColor` field of type `Color`.
+
 List Type
 ---------
 

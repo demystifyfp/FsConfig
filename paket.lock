@@ -620,7 +620,7 @@ NUGET
       System.ComponentModel.Primitives (>= 4.1) - restriction: >= uap10.0
       System.ComponentModel.TypeConverter (>= 4.1) - restriction: >= uap10.0
       System.Runtime.InteropServices.RuntimeInformation (>= 4.0) - restriction: >= uap10.0
-    Microsoft.NETCore.Platforms (2.0.1) - restriction: || (&& (>= net45) (< netstandard1.3) (>= netstandard2.0)) (&& (< net45) (>= netstandard2.0)) (&& (< net46) (>= net461) (>= netstandard2.0)) (>= netcoreapp2.0) (&& (< netstandard1.0) (>= netstandard2.0) (< portable-net45+win8)) (&& (< netstandard1.0) (>= netstandard2.0) (>= win8)) (&& (< netstandard1.0) (>= netstandard2.0) (< win8)) (&& (< netstandard1.3) (>= netstandard2.0) (< win8) (>= wpa81)) (&& (< netstandard1.5) (>= netstandard2.0) (>= uap10.0)) (&& (>= netstandard2.0) (< portable-net45+win8+wpa81)) (&& (>= netstandard2.0) (>= uap10.1)) (&& (>= netstandard2.0) (>= wp8))
+    Microsoft.NETCore.Platforms (2.0.2) - restriction: || (&& (>= net45) (< netstandard1.3) (>= netstandard2.0)) (&& (< net45) (>= netstandard2.0)) (&& (< net46) (>= net461) (>= netstandard2.0)) (>= netcoreapp2.0) (&& (< netstandard1.0) (>= netstandard2.0) (< portable-net45+win8)) (&& (< netstandard1.0) (>= netstandard2.0) (>= win8)) (&& (< netstandard1.0) (>= netstandard2.0) (< win8)) (&& (< netstandard1.3) (>= netstandard2.0) (< win8) (>= wpa81)) (&& (< netstandard1.5) (>= netstandard2.0) (>= uap10.0)) (&& (>= netstandard2.0) (< portable-net45+win8+wpa81)) (&& (>= netstandard2.0) (>= uap10.1)) (&& (>= netstandard2.0) (>= wp8))
     Microsoft.NETCore.Targets (2.0) - restriction: >= netcoreapp1.0
     Microsoft.TestPlatform.ObjectModel (15.7) - restriction: >= netcoreapp1.0
       NETStandard.Library (>= 1.6) - restriction: && (< net451) (>= netstandard1.5)

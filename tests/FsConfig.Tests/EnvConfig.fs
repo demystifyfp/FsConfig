@@ -184,6 +184,15 @@ module ``Given required environment variables exists`` =
     test <@ EnvConfig.Get<Color> "ENV_ENUM_INT" = Ok Color.Red @>
     test <@ EnvConfig.Get<Color> "ENV_ENUM_FLAGS" = Ok expectedFlagOutput @>
 
+  [<Test>]
+  let ``get DU should succeed`` () =
+    setEnvVar ("DU_COLOR", "Red")
+    test <@ EnvConfig.Get<DuConfig> () = Ok {DuColor = DuColor.Red} @>
+
+  [<Test>]
+  let ``get DU should fail with Bad Value for invalid value`` () =
+    setEnvVar ("DU_COLOR", "NotAvailable")
+    test <@ EnvConfig.Get<DuConfig> () = Error (BadValue ("DU_COLOR", "NotAvailable")) @>
 
 module ``Getting option type`` =
   open Common

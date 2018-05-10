@@ -1,3 +1,6 @@
+#### 1.1.1 - May 10, 2018
+* Adds support for Discriminated Union
+
 #### 1.1.0 - May 7, 2018
 * Makes parse logic public to use it in other contexts. 
 

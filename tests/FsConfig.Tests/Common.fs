@@ -62,6 +62,16 @@ module Common =
   | Red = 0
   | Blue = 1
   | Green = 2
+  
+  type DuColor =
+  | Red
+  | Blue
+  | Green
+
+  type DuConfig = {
+    DuColor : DuColor
+  }
+  
 
 
   type OptionConfig = {

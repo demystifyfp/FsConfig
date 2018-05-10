@@ -169,7 +169,6 @@ module internal Core =
                                     and 'T : (new : unit -> 'T)> () = 
           tryParseWith name value (System.Enum.TryParse<'T>) |> wrap 
     }  
-
   let rec parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name splitCharacter =
     let value = configReader.GetValue name
     let targetTypeShape = shapeof<'T>
@@ -184,6 +183,17 @@ module internal Core =
       match value with
       | None -> NotFound name |> Error
       | Some v -> parseEnum<'T> name v enumShape
+    | Shape.FSharpUnion (:? ShapeFSharpUnion<'T> as shape) ->
+      match value with
+      | None -> NotFound name |> Error
+      | Some v -> 
+        let matchedUnionCase =
+          shape.UnionCases 
+          |> Seq.tryFind (fun c -> c.CaseInfo.Name = v)
+          |> Option.map (fun c -> c.CreateUninitialized ())
+        match matchedUnionCase with
+        | None -> BadValue(name,v) |> Error
+        | Some c -> Ok c
     | _ ->
       match getTryParseFunc<'T> targetTypeShape with
       | Some tryParseFunc -> 
