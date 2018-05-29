@@ -1,3 +1,6 @@
+#### 1.1.2 - May 29, 2018
+* Fixes #6 - treating empty string as none for string option type
+
 #### 1.1.1 - May 10, 2018
 * Adds support for Discriminated Union
 
