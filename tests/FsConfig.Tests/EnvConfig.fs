@@ -200,11 +200,24 @@ module ``Getting option type`` =
   type OptionConfig = {
     IntOption : int option
   }
+  type StringOptionConfig = {
+    StringOption : string option
+  }
 
   [<Test>]
   let ``return none if environment variable not exists`` () =
     setEnvVar ("INT_OPTION", null)
     test <@ EnvConfig.Get<OptionConfig> () = Ok {IntOption = None} @>
+  
+  [<Test>]
+  let ``return none if environment variable exists with an empty string and the target type string option`` () =
+    setEnvVar ("STRING_OPTION", " ")
+    test <@ EnvConfig.Get<StringOptionConfig> () = Ok {StringOption = None} @>
+    
+  [<Test>]
+  let ``return Some of string value if environment variable exists with an nonempty string and the target type string option`` () =
+    setEnvVar ("STRING_OPTION", "test")
+    test <@ EnvConfig.Get<StringOptionConfig> () = Ok {StringOption = Some "test"} @>
 
   [<Test>]
   let ``return some of value if environment variable exists`` () =

@@ -123,9 +123,18 @@ module internal Core =
             wrap result
           | Some v ->
             match getTryParseFunc<'t> fsharpOption.Element with
-            | Some tryParseFunc -> 
-              tryParseWith name v tryParseFunc 
-              |> Result.bind (Some >> Ok >> wrap) 
+            | Some tryParseFunc ->
+              match shapeof<'t> with
+              | Shape.String -> 
+                if String.IsNullOrWhiteSpace v then 
+                  let result : ConfigParseResult<'t option> = None |> Ok 
+                  wrap result
+                else
+                  tryParseWith name v tryParseFunc 
+                  |> Result.bind (Some >> Ok >> wrap) 
+              | _ ->
+                tryParseWith name v tryParseFunc 
+                |> Result.bind (Some >> Ok >> wrap) 
             | None -> notSupported name |> Error 
     }
 
