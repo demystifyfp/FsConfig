@@ -190,6 +190,15 @@ module ``Given required environment variables exists`` =
     test <@ EnvConfig.Get<DuConfig> () = Ok {DuColor = DuColor.Red} @>
 
   [<Test>]
+  let ``get DU list should succeed`` () =
+    setEnvVar ("DU_COLORS", "Red, Blue")
+    test <@ EnvConfig.Get<DuListConfig> () = Ok {DuColors = [DuColor.Red; DuColor.Blue];} @>
+  [<Test>]
+  let ``get DU list should fail for invalid value`` () =
+    setEnvVar ("DU_COLORS", "Red, Blue, NotAvailable")
+    test <@ EnvConfig.Get<DuListConfig> () = Error (BadValue ("DU_COLORS", "NotAvailable")) @>
+
+  [<Test>]
   let ``get DU should fail with Bad Value for invalid value`` () =
     setEnvVar ("DU_COLOR", "NotAvailable")
     test <@ EnvConfig.Get<DuConfig> () = Error (BadValue ("DU_COLOR", "NotAvailable")) @>

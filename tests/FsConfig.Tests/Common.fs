@@ -71,8 +71,9 @@ module Common =
   type DuConfig = {
     DuColor : DuColor
   }
-  
-
+  type DuListConfig = {
+    DuColors : DuColor list
+  }
 
   type OptionConfig = {
     IntOption : int option

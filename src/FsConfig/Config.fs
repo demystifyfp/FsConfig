@@ -47,7 +47,7 @@ module internal Core =
     sprintf """The target type of "%s" is currently not supported""" name
     |> NotSupported
 
-  type TryParse<'a> = string -> bool * 'a
+  type TryParse<'a> = string -> 'a option
 
   let getPrefixAndSeparator<'T> defaultPrefix defaultSeparator =
     let conventionAttribute =
@@ -82,33 +82,44 @@ module internal Core =
 
   let tryParseWith name value tryParseFunc  = 
     match tryParseFunc value with
-    | true, v -> Ok v
+    | Some v -> Ok v
     | _ -> BadValue (name, value) |> Error
       
+
+  let tryParse tryParseFunc value =
+    match tryParseFunc value with
+    | true, v -> Some v
+    | _ -> None
+  
+  let tryParseFSharpDU (shape : ShapeFSharpUnion<'T>) value =
+    shape.UnionCases 
+    |> Seq.tryFind (fun c -> c.CaseInfo.Name = value)
+    |> Option.map (fun c -> c.CreateUninitialized ())
 
   let getTryParseFunc<'T> targetTypeShape =
     let wrap(p : 'a) = Some (unbox<TryParse<'T>> p) 
     match targetTypeShape with
-    | Shape.Byte -> wrap Byte.TryParse 
-    | Shape.SByte -> wrap SByte.TryParse
-    | Shape.Int16 -> wrap Int16.TryParse
-    | Shape.Int32 -> wrap Int32.TryParse
-    | Shape.Int64 -> wrap Int64.TryParse
-    | Shape.UInt16 -> wrap UInt16.TryParse 
-    | Shape.UInt32 -> wrap UInt32.TryParse 
-    | Shape.UInt64 -> wrap UInt64.TryParse 
-    | Shape.Single -> wrap Single.TryParse 
-    | Shape.Double -> wrap Double.TryParse 
-    | Shape.Decimal -> wrap Decimal.TryParse 
-    | Shape.Char -> wrap Char.TryParse 
-    | Shape.String -> wrap (fun (s : string) -> (true,s))
-    | Shape.Bool -> wrap Boolean.TryParse
-    | Shape.DateTimeOffset -> wrap DateTimeOffset.TryParse 
-    | Shape.DateTime -> wrap DateTime.TryParse 
-    | Shape.TimeSpan -> wrap TimeSpan.TryParse 
-    | Shape.Char -> wrap Char.TryParse 
-    | Shape.String -> wrap (fun (s : string) -> (true,s)) 
-    | Shape.Guid -> wrap Guid.TryParse
+    | Shape.Byte -> wrap (tryParse Byte.TryParse) 
+    | Shape.SByte -> wrap (tryParse SByte.TryParse)
+    | Shape.Int16 -> wrap (tryParse Int16.TryParse)
+    | Shape.Int32 -> wrap (tryParse Int32.TryParse)
+    | Shape.Int64 -> wrap (tryParse Int64.TryParse)
+    | Shape.UInt16 -> wrap (tryParse UInt16.TryParse) 
+    | Shape.UInt32 -> wrap (tryParse UInt32.TryParse) 
+    | Shape.UInt64 -> wrap (tryParse UInt64.TryParse) 
+    | Shape.Single -> wrap (tryParse Single.TryParse) 
+    | Shape.Double -> wrap (tryParse Double.TryParse) 
+    | Shape.Decimal -> wrap (tryParse Decimal.TryParse) 
+    | Shape.Char -> wrap (tryParse Char.TryParse)
+    | Shape.String -> wrap (tryParse (fun (s : string) -> (true,s)))
+    | Shape.Bool -> wrap (tryParse Boolean.TryParse)
+    | Shape.DateTimeOffset -> wrap (tryParse DateTimeOffset.TryParse)
+    | Shape.DateTime -> wrap (tryParse DateTime.TryParse) 
+    | Shape.TimeSpan -> wrap (tryParse TimeSpan.TryParse) 
+    | Shape.Char -> wrap (tryParse Char.TryParse) 
+    | Shape.Guid -> wrap (tryParse Guid.TryParse)
+    | Shape.FSharpUnion (:? ShapeFSharpUnion<'T> as shape) ->
+      wrap (tryParseFSharpDU shape)
     | _ -> None
 
   let parseFSharpOption<'T> name value (fsharpOption : IShapeFSharpOption) =
@@ -176,8 +187,8 @@ module internal Core =
                                     and 'T : struct
                                     and 'T :> ValueType
                                     and 'T : (new : unit -> 'T)> () = 
-          tryParseWith name value (System.Enum.TryParse<'T>) |> wrap 
-    }  
+          tryParseWith name value (tryParse System.Enum.TryParse<'T>) |> wrap 
+    }
   let rec parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name splitCharacter =
     let value = configReader.GetValue name
     let targetTypeShape = shapeof<'T>
@@ -192,17 +203,6 @@ module internal Core =
       match value with
       | None -> NotFound name |> Error
       | Some v -> parseEnum<'T> name v enumShape
-    | Shape.FSharpUnion (:? ShapeFSharpUnion<'T> as shape) ->
-      match value with
-      | None -> NotFound name |> Error
-      | Some v -> 
-        let matchedUnionCase =
-          shape.UnionCases 
-          |> Seq.tryFind (fun c -> c.CaseInfo.Name = v)
-          |> Option.map (fun c -> c.CreateUninitialized ())
-        match matchedUnionCase with
-        | None -> BadValue(name,v) |> Error
-        | Some c -> Ok c
     | _ ->
       match getTryParseFunc<'T> targetTypeShape with
       | Some tryParseFunc -> 
