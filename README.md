@@ -135,6 +135,8 @@ type Config = {
 
 > With this configuration declaration, FsConfig read the environment variable `CONSOLE_COLOR` and populates the `ConsoleColor` field of type `Color`.
 
+> List of Discriminated Union Types also supported!
+
 ### List Type
 
 FsConfig also supports `list` type, and it expects comma separated individual values. 

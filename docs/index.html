@@ -224,31 +224,14 @@
 </code></pre></td></tr></table>
 <h2><a name="Discriminated-Union-Type" class="anchor" href="#Discriminated-Union-Type">Discriminated Union Type</a></h2>
 <p>FsConfig supports Discriminated Union Types that has cases alone.</p>
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
-<span class="l"> 2: </span>
-<span class="l"> 3: </span>
-<span class="l"> 4: </span>
-<span class="l"> 5: </span>
-<span class="l"> 6: </span>
-<span class="l"> 7: </span>
-<span class="l"> 8: </span>
-<span class="l"> 9: </span>
-<span class="l">10: </span>
-<span class="l">11: </span>
-<span class="l">12: </span>
-<span class="l">13: </span>
-<span class="l">14: </span>
-<span class="l">15: </span>
-<span class="l">16: </span>
-<span class="l">17: </span>
-<span class="l">18: </span>
-<span class="l">19: </span>
-<span class="l">20: </span>
-<span class="l">21: </span>
-<span class="l">22: </span>
-<span class="l">23: </span>
-<span class="l">24: </span>
-<span class="l">25: </span>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+<span class="l">8: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs34', 65)" onmouseover="showTip(event, 'fs34', 65)" class="t">Color</span> <span class="o">=</span>
 | <span onmouseout="hideTip(event, 'fs35', 66)" onmouseover="showTip(event, 'fs35', 66)" class="p">Red</span>
@@ -258,21 +241,21 @@
 <span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 69)" onmouseover="showTip(event, 'fs19', 69)" class="i">Config</span> <span class="o">=</span> {
   <span onmouseout="hideTip(event, 'fs38', 70)" onmouseover="showTip(event, 'fs38', 70)" class="i">ConsoleColor</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs34', 71)" onmouseover="showTip(event, 'fs34', 71)" class="i">Color</span>
 }
-
-<span class="c">(*</span>
-
-<span class="c">&gt; With this configuration declaration, FsConfig read the environment variable `CONSOLE_COLOR` and populates the `ConsoleColor` field of type `Color`.</span>
-
-<span class="c">List Type</span>
-<span class="c">---------</span>
-
-<span class="c">FsConfig also supports `list` type, and it expects comma separated individual values. </span>
-
-<span class="c">For example, to get mulitple ports, we can define the config as </span>
-
-<span class="c">*)</span>
-
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 72)" onmouseover="showTip(event, 'fs19', 72)" class="i">Config</span> <span class="o">=</span> {
+</code></pre></td>
+</tr>
+</table>
+<blockquote>
+<p>With this configuration declaration, FsConfig read the environment variable <code>CONSOLE_COLOR</code> and populates the <code>ConsoleColor</code> field of type <code>Color</code>.
+List of Discriminated Union Types also supported!</p>
+</blockquote>
+<h2><a name="List-Type" class="anchor" href="#List-Type">List Type</a></h2>
+<p>FsConfig also supports <code>list</code> type, and it expects comma separated individual values.</p>
+<p>For example, to get mulitple ports, we can define the config as</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 72)" onmouseover="showTip(event, 'fs19', 72)" class="i">Config</span> <span class="o">=</span> {
   <span class="i">Port</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs13', 73)" onmouseover="showTip(event, 'fs13', 73)" class="i">uint16</span> <span onmouseout="hideTip(event, 'fs39', 74)" onmouseover="showTip(event, 'fs39', 74)" class="i">list</span>
 }
 </code></pre></td>
