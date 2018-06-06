@@ -3,6 +3,9 @@ framework: netstandard2.0, netcoreapp2.0, net45, net461
 redirects: force
 
 nuget FSharp.Core >= 4.2.3
+nuget Microsoft.Extensions.Configuration
+nuget Microsoft.Extensions.Configuration.JSON
+nuget Microsoft.Extensions.Configuration.Xml
 nuget TypeShape ~> 4.0
 
 group Build

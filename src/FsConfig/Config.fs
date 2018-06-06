@@ -237,8 +237,8 @@ module internal Core =
 
 
           field.Accept {
-            new IWriteMemberVisitor<'RecordType, ConfigParseResult<('RecordType -> 'RecordType) list>> with
-              member __.Visit (shape : ShapeWriteMember<'RecordType, 'FieldType>) =
+            new IWriteMemberVisitor<'T, ConfigParseResult<('T -> 'T) list>> with
+              member __.Visit (shape : ShapeWriteMember<'T, 'FieldType>) =
                 match parseInternal<'FieldType> configReader fieldNameCanonicalizer configName splitCharacter with
                 | Ok fieldValue -> (fun record -> shape.Inject record fieldValue) :: xs |> Ok
                 | Error e -> Error e

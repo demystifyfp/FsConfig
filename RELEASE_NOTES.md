@@ -1,3 +1,6 @@
+#### 2.0.0-beta1 - June 6, 2018
+* Adds initial support for AppConfig
+
 #### 1.2.1 - May 30, 2018
 * Fixes #7 - Adds support for list of Discriminated Union
 
