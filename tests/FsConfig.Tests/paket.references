@@ -2,6 +2,7 @@ FSharp.Core
 Microsoft.Extensions.Configuration
 Microsoft.Extensions.Configuration.Xml
 Microsoft.Extensions.Configuration.JSON
+Microsoft.Extensions.Configuration.Ini
 group Test
 UnQuote
 NUnit

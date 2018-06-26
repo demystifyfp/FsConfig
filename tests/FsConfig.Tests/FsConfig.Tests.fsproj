@@ -11,6 +11,8 @@
     <Compile Include="AppConfig.fs" />
     <None Include="paket.references" />
     <Content Include="settings.json" CopyToOutputDirectory="PreserveNewest"/>
+    <Content Include="settings.xml" CopyToOutputDirectory="PreserveNewest"/>
+    <Content Include="settings.ini" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FsConfig\FsConfig.fsproj" />

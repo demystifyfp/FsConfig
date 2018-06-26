@@ -4,6 +4,7 @@ redirects: force
 
 nuget FSharp.Core >= 4.2.3
 nuget Microsoft.Extensions.Configuration
+nuget Microsoft.Extensions.Configuration.Ini
 nuget Microsoft.Extensions.Configuration.JSON
 nuget Microsoft.Extensions.Configuration.Xml
 nuget TypeShape ~> 4.0
