@@ -1,11 +1,11 @@
 FSharp.Core
 Microsoft.Extensions.Configuration
-Microsoft.Extensions.Configuration.Xml
-Microsoft.Extensions.Configuration.JSON
-Microsoft.Extensions.Configuration.Ini
 group Test
 UnQuote
 NUnit
 NUnit3TestAdapter
 Microsoft.NET.Test.Sdk
 FsUnit
+Microsoft.Extensions.Configuration.Xml
+Microsoft.Extensions.Configuration.JSON
+Microsoft.Extensions.Configuration.Ini

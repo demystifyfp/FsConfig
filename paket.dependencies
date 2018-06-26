@@ -1,18 +1,15 @@
 source https://nuget.org/api/v2
-framework: netstandard2.0, netcoreapp2.0, net45, net461
+framework: netstandard2.0, netcoreapp2.0
 redirects: force
 
 nuget FSharp.Core >= 4.2.3
+nuget TypeShape ~> 5.0
 nuget Microsoft.Extensions.Configuration
-nuget Microsoft.Extensions.Configuration.Ini
-nuget Microsoft.Extensions.Configuration.JSON
-nuget Microsoft.Extensions.Configuration.Xml
-nuget TypeShape ~> 4.0
 
 group Build
   source https://nuget.org/api/v2
   
-  nuget FAKE
+  nuget FAKE 4.64.3
   nuget FSharp.Formatting
 
   github fsharp/FAKE modules/Octokit/Octokit.fsx
@@ -20,8 +17,12 @@ group Build
 group Test
   source https://nuget.org/api/v2
   
-nuget FsUnit
-nuget Microsoft.NET.Test.Sdk 15.6.1
-nuget NUnit
-nuget NUnit3TestAdapter 3.10.0
-nuget UnQuote
+  nuget FsUnit
+  nuget Microsoft.NET.Test.Sdk 15.6.1
+  nuget NUnit
+  nuget NUnit3TestAdapter 3.10.0
+  nuget UnQuote
+  
+  nuget Microsoft.Extensions.Configuration.Ini
+  nuget Microsoft.Extensions.Configuration.JSON
+  nuget Microsoft.Extensions.Configuration.Xml

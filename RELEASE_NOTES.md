@@ -1,3 +1,7 @@
+#### 2.0.0 - June 26, 2018
+* Adds support for AppConfig (JSON, XML & INI) files in dotnet core
+* Upgrades TypeShape
+
 #### 2.0.0-beta1 - June 6, 2018
 * Adds initial support for AppConfig
 
