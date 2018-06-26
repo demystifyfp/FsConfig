@@ -339,10 +339,155 @@ EnvConfig.Get<decimal> "MY_APP_INITIAL_BALANCE" // Result<decimal, ConfigParseEr
 
 (**
 
-appSettings (Only Supported in V0.0.6 or below)
-===============================================
+## App Config
 
-Are you using `appSettings` in (either `web.config` or `App.config`) to manage your configuration settings? FsConfig supports that too!
+FsConfig supports App Config for both DotNet Core and Non DotNet Core Applications. 
+
+* [DotNet Core Applications](#dotnet-core-configuration) (Supported from V2.0.0 or above)
+
+* [Non DotNet Core Applications](#appsettings-only-supported-in-v006-or-below) (Only Supported in V0.0.6 or below)
+
+### DotNet Core Configuration (Supported from V2.0.0 or above)
+
+FsConfig abstracts the configuration provider by depending on [IConfigurationRoot](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.configuration.iconfigurationroot).
+*)
+
+let configurationRoot : IConfigurationRoot = "{...}"
+let appConfig = new AppConfig(configurationRoot)
+
+(**
+
+After creating an instance `appConfig` (of type `AppConfig` from FsConfig), you can use it to read the configuration values as below
+
+*)
+
+// Reading Primitive
+let result = 
+  appConfig.Get<int> "processId" // Result<int, ConfigParseError>
+
+// A Sample Record
+type SampleConfig = {
+  ProcessId : int
+  ProcessName : string
+}
+
+// Reading a Record type
+let result = 
+  appConfig.Get<SampleConfig> () // Result<SampleConfig, ConfigParseError>
+
+// A Sample Nested Record
+type AwsConfig = {
+  AccessKeyId : string
+  DefaultRegion : string
+  SecretAccessKey : string
+}
+
+type Config = {
+  MagicNumber : int
+  Aws : AwsConfig
+}
+
+// Reading a Nested Record type
+let result = 
+  appConfig.Get<Config> () // Result<Config, ConfigParseError>
+
+(**
+
+Refer below for creating `configurationRoot` based on the file type and using FsConfig to read the values.  
+
+#### JSON
+
+```json
+{
+  "processId" : "123",
+  "processName" : "FsConfig",
+  "magicNumber" : 42,
+  "aws" : {
+    "accessKeyId" : "Id-123",
+    "defaultRegion" : "us-east-1",
+    "secretAccessKey" : "secret123"
+  },
+  "colors" : "Red,Green"
+}
+```
+
+This JSON file can be read using 
+
+*)
+
+// Requires NuGet package
+// Microsoft.Extensions.Configuration.Json
+let configurationRoot =  
+  ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("settings.json").Build()
+
+let appConfig = new AppConfig(configurationRoot)
+let result = 
+  appConfig.Get<Config> () // Result<Config, ConfigParseError>
+
+
+(** 
+#### XML
+
+```xml
+<Settings>
+  <ProcessId>123</ProcessId>
+  <ProcessName>FsConfig</ProcessName>
+  <MagicNumber>42</MagicNumber>
+  <Aws>
+    <AccessKeyId>Id-123</AccessKeyId>
+    <DefaultRegion>us-east-1</DefaultRegion>
+    <SecretAccessKey>secret123</SecretAccessKey>
+  </Aws>
+  <Colors>Red,Green</Colors>
+</Settings>
+```
+
+This XML file can be read using 
+*)
+
+// Requires NuGet package
+// Microsoft.Extensions.Configuration.Xml
+let configurationRoot =  
+  ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+    .AddXmlFile("settings.xml").Build()
+
+let appConfig = new AppConfig(configurationRoot)
+let result = 
+  appConfig.Get<Config> () // Result<Config, ConfigParseError>
+
+
+(** 
+#### INI
+
+```ini
+ProcessId=123
+ProcessName=FsConfig
+MagicNumber=42
+Colors=Red,Green
+
+[Aws]
+AccessKeyId=Id-123
+DefaultRegion=us-east-1
+SecretAccessKey=secret123
+```
+
+This INI file can be read using
+*)
+
+// Requires NuGet package
+// Microsoft.Extensions.Configuration.Ini
+let configurationRoot =  
+  ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+    .AddIniFile("settings.ini").Build()
+
+let appConfig = new AppConfig(configurationRoot)
+let result = 
+  appConfig.Get<Config> () // Result<Config, ConfigParseError>
+
+(** 
+
+### appSettings (Only Supported in V0.0.6 or below)
 
 We can read the `appSettings` values using the `AppConfig` type instead of `EnvConfig` type. 
 
