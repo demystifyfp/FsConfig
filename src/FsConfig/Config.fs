@@ -96,8 +96,22 @@ module internal Core =
     |> Seq.tryFind (fun c -> c.CaseInfo.Name = value)
     |> Option.map (fun c -> c.CreateUninitialized ())
 
+
+  let tryParseEnum<'T> (enumShape : IShapeEnum) value = 
+    let wrap (p : Option<'a>) =
+      unbox<Option<'T>> p
+    enumShape.Accept {
+      new IEnumVisitor<'T option> with
+        member __.Visit<'Enum, 'U when 'Enum : enum<'U>
+                                    and 'Enum : struct
+                                    and 'Enum :> ValueType
+                                    and 'Enum : (new : unit -> 'Enum)> () =
+          tryParse System.Enum.TryParse<'Enum> value |> wrap
+    }
+
   let getTryParseFunc<'T> targetTypeShape =
-    let wrap(p : 'a) = Some (unbox<TryParse<'T>> p) 
+    let wrap(p : 'a) = 
+      Some (unbox<TryParse<'T>> p) 
     match targetTypeShape with
     | Shape.Byte -> wrap (tryParse Byte.TryParse) 
     | Shape.SByte -> wrap (tryParse SByte.TryParse)
@@ -118,6 +132,8 @@ module internal Core =
     | Shape.TimeSpan -> wrap (tryParse TimeSpan.TryParse) 
     | Shape.Char -> wrap (tryParse Char.TryParse) 
     | Shape.Guid -> wrap (tryParse Guid.TryParse)
+    | Shape.Enum enumShape ->
+      wrap (tryParseEnum<'T> enumShape)
     | Shape.FSharpUnion (:? ShapeFSharpUnion<'T> as shape) ->
       wrap (tryParseFSharpDU shape)
     | _ -> None
@@ -177,18 +193,7 @@ module internal Core =
               |> Result.bind (List.rev >> Ok >> wrap)
             | None -> notSupported name |> Error 
     }
-
-  let parseEnum<'T> name value (enumShape : IShapeEnum) : ConfigParseResult<'T> = 
-    let wrap (p : ConfigParseResult<'a>) =
-      unbox<ConfigParseResult<'T>> p
-    enumShape.Accept {
-      new IEnumVisitor<ConfigParseResult<'T>> with
-        member __.Visit<'T, 'U when 'T : enum<'U>
-                                    and 'T : struct
-                                    and 'T :> ValueType
-                                    and 'T : (new : unit -> 'T)> () = 
-          tryParseWith name value (tryParse System.Enum.TryParse<'T>) |> wrap 
-    }
+  
   let rec parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name splitCharacter =
     let value = configReader.GetValue name
     let targetTypeShape = shapeof<'T>
@@ -199,10 +204,6 @@ module internal Core =
       parseFSharpOption<'T> name value fsharpOption
     | Shape.FSharpList fsharpList ->
       parseFSharpList<'T> name value fsharpList splitCharacter
-    | Shape.Enum enumShape ->
-      match value with
-      | None -> NotFound name |> Error
-      | Some v -> parseEnum<'T> name v enumShape
     | _ ->
       match getTryParseFunc<'T> targetTypeShape with
       | Some tryParseFunc -> 

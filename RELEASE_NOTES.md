@@ -1,3 +1,6 @@
+#### 2.0.1 - July 27, 2018
+* Adds support for list of enums & option of enums.
+
 #### 2.0.0 - June 26, 2018
 * Adds support for AppConfig (JSON, XML & INI) files in dotnet core
 * Upgrades TypeShape

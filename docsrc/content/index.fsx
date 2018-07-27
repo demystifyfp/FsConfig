@@ -129,6 +129,8 @@ FsConfig supports the following data types and leverages their respective `TryPa
 * `TimeSpan`, `DateTimeOffset`, `DateTime`
 * `Guid`
 * `Enum`
+* `list` of all the above types
+* `option` of all the above types
 
 Option Type
 -----------

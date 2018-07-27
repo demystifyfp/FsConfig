@@ -184,6 +184,15 @@ module ``Given required environment variables exists`` =
     test <@ EnvConfig.Get<Color> "ENV_ENUM_INT" = Ok Color.Red @>
     test <@ EnvConfig.Get<Color> "ENV_ENUM_FLAGS" = Ok expectedFlagOutput @>
 
+  type Colors = {
+    Colors : Color list
+  }
+
+  [<Test>]
+  let ``get Enum list should succeed`` () =
+    setEnvVar ("COLORS", "Red, Green, Blue")
+    test <@ EnvConfig.Get<Colors> () = Ok {Colors = [Color.Red;Color.Green;Color.Blue]} @>
+
   [<Test>]
   let ``get DU should succeed`` () =
     setEnvVar ("DU_COLOR", "Red")
@@ -212,6 +221,10 @@ module ``Getting option type`` =
   type StringOptionConfig = {
     StringOption : string option
   }
+  type EnumOptionConfig = {
+    ColorOption : Color option
+  }
+  
 
   [<Test>]
   let ``return none if environment variable not exists`` () =
@@ -238,6 +251,17 @@ module ``Getting option type`` =
   let ``return bad value error if environment variable exists with wrong format`` () =
     setEnvVar ("INT_OPTION", "foo")
     test <@ EnvConfig.Get<OptionConfig> () = Error (BadValue ("INT_OPTION", "foo")) @>
+
+
+  [<Test>]
+  let ``return some of enum value if environment variable exists`` () =
+    setEnvVar ("COLOR_OPTION", "Red")
+    test <@ EnvConfig.Get<EnumOptionConfig> () = Ok {ColorOption = Some Color.Red} @>
+
+  [<Test>]
+  let ``return none for enum option value if environment variable not exists`` () =
+    setEnvVar ("COLOR_OPTION", "")
+    test <@ EnvConfig.Get<EnumOptionConfig> () = Ok {ColorOption = None} @>
 
 module ``Getting record with mutlitple option type fields`` =
   open Common
