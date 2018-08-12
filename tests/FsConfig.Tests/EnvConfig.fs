@@ -310,6 +310,22 @@ module ``Getting list type`` =
     setEnvVar ("INT_LIST_UP", "42|43|44")
     test <@ EnvConfig.Get<IntListUsingPipesConfig> () = Ok {IntListUp = [42;43;44]} @>
 
+module ``Getting record with default value`` =
+
+  [<Literal>]
+  let connString = "Server=127.0.0.1;Port=5432;Database=FsTweet;User Id=postgres;Password=test;"
+
+  type Config = {
+    [<DefaultValue("8080")>]
+    HttpServerPort : int16
+    [<DefaultValue(connString)>]
+    DbConnectionString: string
+  }
+
+  let ``return record with default value`` () =
+    test <@ EnvConfig.Get<Config> () = Ok {HttpServerPort = 8080s; DbConnectionString = connString} @>
+
+
 module ``Getting record with record type`` =
   open Common
 

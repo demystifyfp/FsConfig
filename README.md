@@ -4,6 +4,9 @@ FsConfig is a F# library for reading configuration data from environment variabl
 
 [![Nuget](https://img.shields.io/nuget/dt/FsConfig.svg)](https://www.nuget.org/packages/FsConfig)
 
+[![Mono CI Build Status](https://img.shields.io/travis/demystifyfp/FsConfig/master.svg)](https://travis-ci.org/demystifyfp/FsConfig) 
+[![.NET Build Status](https://img.shields.io/appveyor/ci/demystifyfp/fsconfig/master.svg)](https://ci.appveyor.com/project/demystifyfp/fsconfig)
+
 ## Why FsConfig?
 
 To understand FsConfig, let's have a look at an use case from the [FsTweet](https://github.com/demystifyfp/FsTweet) application.
@@ -476,12 +479,6 @@ The idea of FsConfig is inspired by [Kelsey Hightower](https://twitter.com/kelse
 
 FsConfig uses [Eirik Tsarpalis](https://twitter.com/eiriktsarpalis)'s [TypeShape](https://github.com/eiriktsarpalis/TypeShape) library for generic programming. 
 
-
-## Build Status
-
-Mono | .NET
----- | ----
-[![Mono CI Build Status](https://img.shields.io/travis/demystifyfp/FsConfig/master.svg)](https://travis-ci.org/demystifyfp/FsConfig) | [![.NET Build Status](https://img.shields.io/appveyor/ci/demystifyfp/fsconfig/master.svg)](https://ci.appveyor.com/project/demystifyfp/fsconfig)
 
 ## Maintainer(s)
 
