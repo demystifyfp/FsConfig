@@ -1,6 +1,7 @@
 namespace FsConfig
 open System
 open System.Text.RegularExpressions
+open System.ComponentModel
 
 type ConfigParseError =
 | BadValue of (string * string)
@@ -21,6 +22,11 @@ type FieldNameCanonicalizer = Prefix -> string -> string
 type CustomNameAttribute(name : string) =
   inherit Attribute ()
   member __.Name = name
+
+[<AttributeUsage(AttributeTargets.Property, AllowMultiple = false)>]
+type DefaultValueAttribute(value : string) =
+  inherit Attribute ()
+  member __.Value = value
 
 [<AttributeUsage(AttributeTargets.Property, AllowMultiple = false)>]
 type ListSeparatorAttribute(splitCharacter : char) =
@@ -193,24 +199,33 @@ module internal Core =
               |> Result.bind (List.rev >> Ok >> wrap)
             | None -> notSupported name |> Error 
     }
+
+  type FieldValueParseArgs = {
+    Name : string
+    ListSplitChar : SplitCharacter
+    DefaultValue : string option
+  }
   
-  let rec parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name splitCharacter =
-    let value = configReader.GetValue name
+  let rec parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) args =
+    let value = 
+      match configReader.GetValue args.Name with
+      | Some v -> Some v
+      | None -> args.DefaultValue
     let targetTypeShape = shapeof<'T>
     match targetTypeShape with
     | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
-      parseFSharpRecord configReader fieldNameCanonicalizer (Prefix name) shape
+      parseFSharpRecord configReader fieldNameCanonicalizer (Prefix args.Name) shape
     | Shape.FSharpOption fsharpOption -> 
-      parseFSharpOption<'T> name value fsharpOption
+      parseFSharpOption<'T> args.Name value fsharpOption
     | Shape.FSharpList fsharpList ->
-      parseFSharpList<'T> name value fsharpList splitCharacter
+      parseFSharpList<'T> args.Name value fsharpList args.ListSplitChar
     | _ ->
       match getTryParseFunc<'T> targetTypeShape with
       | Some tryParseFunc -> 
         match value with
-        | Some v -> tryParseWith name v tryParseFunc
-        | None -> NotFound name |> Error
-      | None -> notSupported name |> Error
+        | Some v -> tryParseWith args.Name v tryParseFunc
+        | None -> NotFound args.Name |> Error
+      | None -> notSupported args.Name |> Error
   and parseFSharpRecord (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) prefix shape =
     let record = shape.CreateUninitialized()
     shape.Fields
@@ -220,13 +235,13 @@ module internal Core =
         | Error x -> Error x 
         | Ok xs ->
 
-          let customHeadAttribute =
+          let customNameAttribute =
             field.MemberInfo.GetCustomAttributes(typeof<CustomNameAttribute>, true)
             |> Seq.tryHead
             |> Option.map (fun a -> a :?> CustomNameAttribute)
 
           let configName = 
-            match customHeadAttribute with
+            match customNameAttribute with
             | Some attr -> attr.Name
             | None -> fieldNameCanonicalizer prefix field.Label
 
@@ -236,11 +251,22 @@ module internal Core =
             |> Option.map (fun sc -> sc :?> ListSeparatorAttribute)
             |> function None ->SplitCharacter() | Some c -> c.SplitCharacter
 
+          let defaultValueAttribute =
+            field.MemberInfo.GetCustomAttributes(typeof<DefaultValueAttribute>, true)
+            |> Seq.tryHead
+            |> Option.map (fun a -> a :?> DefaultValueAttribute)
+            |> Option.map (fun attr -> attr.Value)
+
+          let args = {
+            Name = configName
+            ListSplitChar = splitCharacter
+            DefaultValue = defaultValueAttribute
+          }
 
           field.Accept {
             new IWriteMemberVisitor<'T, ConfigParseResult<('T -> 'T) list>> with
               member __.Visit (shape : ShapeWriteMember<'T, 'FieldType>) =
-                match parseInternal<'FieldType> configReader fieldNameCanonicalizer configName splitCharacter with
+                match parseInternal<'FieldType> configReader fieldNameCanonicalizer args with
                 | Ok fieldValue -> (fun record -> shape.Inject record fieldValue) :: xs |> Ok
                 | Error e -> Error e
           }
@@ -252,4 +278,9 @@ module Config =
   open Core
 
   let parse<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name =
-    parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name (SplitCharacter())  
+    let args = {
+      Name = name
+      ListSplitChar = SplitCharacter()
+      DefaultValue = None
+    }
+    parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) args
