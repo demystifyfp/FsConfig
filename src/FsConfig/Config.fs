@@ -10,9 +10,7 @@ type ConfigParseError =
 
 type Prefix = Prefix of string
 type Separator = Separator of string
-
-type SplitCharacter (?splitCharacter) =
-  member val Value = defaultArg splitCharacter ','
+type SplitCharacter = SplitCharacter of char
 
 type ConfigParseResult<'T> = Result<'T, ConfigParseError>
 
@@ -31,7 +29,7 @@ type DefaultValueAttribute(value : string) =
 [<AttributeUsage(AttributeTargets.Property, AllowMultiple = false)>]
 type ListSeparatorAttribute(splitCharacter : char) =
   inherit Attribute ()
-  member __.SplitCharacter = SplitCharacter(splitCharacter)
+  member __.SplitCharacter = SplitCharacter splitCharacter
 
 [<AttributeUsage(AttributeTargets.Class, AllowMultiple = false)>]
 type ConventionAttribute(prefix : string) =
@@ -52,6 +50,8 @@ module internal Core =
   let notSupported name =
     sprintf """The target type of "%s" is currently not supported""" name
     |> NotSupported
+
+  let defaultSplitCharacter = SplitCharacter ','
 
   type TryParse<'a> = string -> 'a option
 
@@ -179,7 +179,7 @@ module internal Core =
           |> Result.map (fun v -> v :: xs)
         )
 
-  let parseFSharpList<'T> name value (fsharpList: IShapeFSharpList) (splitCharacter:SplitCharacter) =
+  let parseFSharpList<'T> name value (fsharpList: IShapeFSharpList) (SplitCharacter splitCharacter) =
     let wrap (p : ConfigParseResult<'a>) =
       unbox<ConfigParseResult<'T>> p
     fsharpList.Accept {
@@ -192,7 +192,7 @@ module internal Core =
           | Some (v : string) -> 
             match getTryParseFunc<'t> fsharpList.Element with
             | Some tryParseFunc -> 
-              v.Split(splitCharacter.Value) 
+              v.Split(splitCharacter) 
               |> Array.map (fun s -> s.Trim())
               |> Array.filter (String.IsNullOrWhiteSpace >> not)
               |> Array.fold (parseListReducer name tryParseFunc) (Ok [])
@@ -249,7 +249,7 @@ module internal Core =
             field.MemberInfo.GetCustomAttributes(typeof<ListSeparatorAttribute>, true)
             |> Seq.tryHead
             |> Option.map (fun sc -> sc :?> ListSeparatorAttribute)
-            |> function None ->SplitCharacter() | Some c -> c.SplitCharacter
+            |> function None -> defaultSplitCharacter | Some c -> c.SplitCharacter
 
           let defaultValueAttribute =
             field.MemberInfo.GetCustomAttributes(typeof<DefaultValueAttribute>, true)
@@ -280,7 +280,7 @@ module Config =
   let parse<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) name =
     let args = {
       Name = name
-      ListSplitChar = SplitCharacter()
+      ListSplitChar = defaultSplitCharacter
       DefaultValue = None
     }
     parseInternal<'T> (configReader : IConfigReader) (fieldNameCanonicalizer : FieldNameCanonicalizer) args
