@@ -3,9 +3,7 @@
 FsConfig is a F# library for reading configuration data from environment variables and AppSettings with type safety
 
 [![Nuget](https://img.shields.io/nuget/dt/FsConfig.svg)](https://www.nuget.org/packages/FsConfig)
-
-[![Mono CI Build Status](https://img.shields.io/travis/demystifyfp/FsConfig/master.svg)](https://travis-ci.org/demystifyfp/FsConfig) 
-[![.NET Build Status](https://img.shields.io/appveyor/ci/demystifyfp/fsconfig/master.svg)](https://ci.appveyor.com/project/demystifyfp/fsconfig)
+[![Build Status](https://img.shields.io/travis/demystifyfp/FsConfig/master.svg)](https://travis-ci.org/demystifyfp/FsConfig)
 
 ## Why FsConfig?
 
@@ -206,6 +204,20 @@ type Config = {
 ```
 
 > With this configuration declaration, FsConfig read the environment variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION` and populates the `Aws` field of type `AwsConfig`.
+
+
+### Default Value
+
+If you'd like to use a default value in the absence of a field value, you can make use of the `DefaultValue` attribute.
+
+```fsharp
+type Config = {
+  [<DefaultValue("8080")>]
+  HttpServerPort : int16
+  [<DefaultValue("Server=localhost;Port=5432;Database=FsTweet;User Id=postgres;Password=test;")>]
+  DbConnectionString: string
+}
+```
 
 ## Environment Variable Name Convention & Customization
 

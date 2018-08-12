@@ -243,6 +243,22 @@ type Config = {
 
 > With this configuration declaration, FsConfig read the environment variables `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION` and populates the `Aws` field of type `AwsConfig`.
 
+Default Value
+=============
+
+If you'd like to use a default value in the absence of a field value, you can make use of the `DefaultValue` attribute.
+
+*)
+
+type Config = {
+  [<DefaultValue("8080")>]
+  HttpServerPort : int16
+  [<DefaultValue("Server=localhost;Port=5432;Database=FsTweet;User Id=postgres;Password=test;")>]
+  DbConnectionString: string
+}
+
+(**
+
 Environment Variable Name Convention & Customization
 =========================================================
 

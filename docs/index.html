@@ -343,14 +343,32 @@ List of Discriminated Union Types also supported!</p>
 <blockquote>
 <p>With this configuration declaration, FsConfig read the environment variables <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, and <code>AWS_DEFAULT_REGION</code> and populates the <code>Aws</code> field of type <code>AwsConfig</code>.</p>
 </blockquote>
+<h1><a name="Default-Value" class="anchor" href="#Default-Value">Default Value</a></h1>
+<p>If you'd like to use a default value in the absence of a field value, you can make use of the <code>DefaultValue</code> attribute.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 98)" onmouseover="showTip(event, 'fs19', 98)" class="i">Config</span> <span class="o">=</span> {
+  [&lt;<span onmouseout="hideTip(event, 'fs51', 99)" onmouseover="showTip(event, 'fs51', 99)" class="i">DefaultValue</span>(<span class="s">&quot;8080&quot;</span>)&gt;]
+  <span class="i">HttpServerPort</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs52', 100)" onmouseover="showTip(event, 'fs52', 100)" class="i">int16</span>
+  [&lt;<span onmouseout="hideTip(event, 'fs51', 101)" onmouseover="showTip(event, 'fs51', 101)" class="i">DefaultValue</span>(<span class="s">&quot;Server=localhost;Port=5432;Database=FsTweet;User Id=postgres;Password=test;&quot;</span>)&gt;]
+  <span class="i">DbConnectionString</span><span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 102)" onmouseover="showTip(event, 'fs16', 102)" class="i">string</span>
+}
+</code></pre></td>
+</tr>
+</table>
 <h1><a name="Environment-Variable-Name-Convention-amp-Customization" class="anchor" href="#Environment-Variable-Name-Convention-amp-Customization">Environment Variable Name Convention &amp; Customization</a></h1>
 <p>By default, FsConfig follows Underscores with uppercase convention, as in <code>UPPER_CASE</code>, for deriving the environment variable name.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 <span class="l">2: </span>
 <span class="l">3: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 98)" onmouseover="showTip(event, 'fs19', 98)" class="i">Config</span> <span class="o">=</span> {
-  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 99)" onmouseover="showTip(event, 'fs16', 99)" class="i">string</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 103)" onmouseover="showTip(event, 'fs19', 103)" class="i">Config</span> <span class="o">=</span> {
+  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 104)" onmouseover="showTip(event, 'fs16', 104)" class="i">string</span>
 }
 </code></pre></td>
 </tr>
@@ -365,8 +383,8 @@ List of Discriminated Union Types also supported!</p>
 <span class="l">4: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">[&lt;<span class="i">Convention</span>(<span class="s">&quot;FSTWEET&quot;</span>)&gt;]
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 100)" onmouseover="showTip(event, 'fs19', 100)" class="i">Config</span> <span class="o">=</span> {
-  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 101)" onmouseover="showTip(event, 'fs16', 101)" class="i">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 105)" onmouseover="showTip(event, 'fs19', 105)" class="i">Config</span> <span class="o">=</span> {
+  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 106)" onmouseover="showTip(event, 'fs16', 106)" class="i">string</span>
 }
 </code></pre></td>
 </tr>
@@ -381,8 +399,8 @@ List of Discriminated Union Types also supported!</p>
 <span class="l">4: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp">[&lt;<span class="i">Convention</span>(<span class="s">&quot;FSTWEET&quot;</span>, <span class="i">Separator</span><span class="o">=</span><span class="s">&quot;-&quot;</span>)&gt;]
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 102)" onmouseover="showTip(event, 'fs19', 102)" class="i">Config</span> <span class="o">=</span> {
-  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 103)" onmouseover="showTip(event, 'fs16', 103)" class="i">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 107)" onmouseover="showTip(event, 'fs19', 107)" class="i">Config</span> <span class="o">=</span> {
+  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 108)" onmouseover="showTip(event, 'fs16', 108)" class="i">string</span>
 }
 </code></pre></td>
 </tr>
@@ -396,9 +414,9 @@ List of Discriminated Union Types also supported!</p>
 <span class="l">3: </span>
 <span class="l">4: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 104)" onmouseover="showTip(event, 'fs19', 104)" class="i">Config</span> <span class="o">=</span> {
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 109)" onmouseover="showTip(event, 'fs19', 109)" class="i">Config</span> <span class="o">=</span> {
   [&lt;<span class="i">CustomName</span>(<span class="s">&quot;MY_SERVER_KEY&quot;</span>)&gt;]
-  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 105)" onmouseover="showTip(event, 'fs16', 105)" class="i">string</span>
+  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 110)" onmouseover="showTip(event, 'fs16', 110)" class="i">string</span>
 }
 </code></pre></td>
 </tr>
@@ -433,24 +451,24 @@ List of Discriminated Union Types also supported!</p>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span class="i">FsConfig</span>
 
 <span class="c">// Prefix -&gt; string -&gt; string</span>
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs51', 106)" onmouseover="showTip(event, 'fs51', 106)" class="f">lowerCaseConfigNameCanonicalizer</span> (<span class="i">Prefix</span> <span class="i">prefix</span>) (<span onmouseout="hideTip(event, 'fs52', 107)" onmouseover="showTip(event, 'fs52', 107)" class="i">name</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 108)" onmouseover="showTip(event, 'fs16', 108)" class="t">string</span>) <span class="o">=</span> 
-  <span class="k">let</span> <span class="i">lowerCaseName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs52', 109)" onmouseover="showTip(event, 'fs52', 109)" class="i">name</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs53', 110)" onmouseover="showTip(event, 'fs53', 110)" class="i">ToLowerInvariant</span>()
-  <span class="k">if</span> <span onmouseout="hideTip(event, 'fs54', 111)" onmouseover="showTip(event, 'fs54', 111)" class="i">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs55', 112)" onmouseover="showTip(event, 'fs55', 112)" class="i">IsNullOrEmpty</span> <span class="i">prefix</span> <span class="k">then</span> 
-    <span onmouseout="hideTip(event, 'fs52', 113)" onmouseover="showTip(event, 'fs52', 113)" class="i">name</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs53', 114)" onmouseover="showTip(event, 'fs53', 114)" class="i">ToLowerInvariant</span>()
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs53', 111)" onmouseover="showTip(event, 'fs53', 111)" class="f">lowerCaseConfigNameCanonicalizer</span> (<span class="i">Prefix</span> <span class="i">prefix</span>) (<span onmouseout="hideTip(event, 'fs54', 112)" onmouseover="showTip(event, 'fs54', 112)" class="i">name</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 113)" onmouseover="showTip(event, 'fs16', 113)" class="t">string</span>) <span class="o">=</span> 
+  <span class="k">let</span> <span class="i">lowerCaseName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs54', 114)" onmouseover="showTip(event, 'fs54', 114)" class="i">name</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs55', 115)" onmouseover="showTip(event, 'fs55', 115)" class="i">ToLowerInvariant</span>()
+  <span class="k">if</span> <span onmouseout="hideTip(event, 'fs56', 116)" onmouseover="showTip(event, 'fs56', 116)" class="i">String</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs57', 117)" onmouseover="showTip(event, 'fs57', 117)" class="i">IsNullOrEmpty</span> <span class="i">prefix</span> <span class="k">then</span> 
+    <span onmouseout="hideTip(event, 'fs54', 118)" onmouseover="showTip(event, 'fs54', 118)" class="i">name</span><span class="o">.</span><span onmouseout="hideTip(event, 'fs55', 119)" onmouseover="showTip(event, 'fs55', 119)" class="i">ToLowerInvariant</span>()
   <span class="k">else</span>
-    <span onmouseout="hideTip(event, 'fs56', 115)" onmouseover="showTip(event, 'fs56', 115)" class="i">sprintf</span> <span class="s">&quot;%s-%s&quot;</span> (<span class="i">prefix</span><span class="o">.</span><span class="i">ToLowerInvariant</span>()) <span class="i">lowerCaseName</span>
+    <span onmouseout="hideTip(event, 'fs58', 120)" onmouseover="showTip(event, 'fs58', 120)" class="i">sprintf</span> <span class="s">&quot;%s-%s&quot;</span> (<span class="i">prefix</span><span class="o">.</span><span class="i">ToLowerInvariant</span>()) <span class="i">lowerCaseName</span>
 
 
 [&lt;<span class="i">Convention</span>(<span class="s">&quot;FSTWEET&quot;</span>)&gt;]
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 116)" onmouseover="showTip(event, 'fs19', 116)" class="i">Config</span> <span class="o">=</span> {
-  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 117)" onmouseover="showTip(event, 'fs16', 117)" class="i">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 121)" onmouseover="showTip(event, 'fs19', 121)" class="i">Config</span> <span class="o">=</span> {
+  <span class="i">ServerKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 122)" onmouseover="showTip(event, 'fs16', 122)" class="i">string</span>
 }
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 118)" onmouseover="showTip(event, 'fs2', 118)" class="f">main</span> <span onmouseout="hideTip(event, 'fs3', 119)" onmouseover="showTip(event, 'fs3', 119)" class="i">argv</span> <span class="o">=</span>
-  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 120)" onmouseover="showTip(event, 'fs28', 120)" class="i">config</span> <span class="o">=</span> 
-    <span class="k">match</span> <span class="i">EnvConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 121)" onmouseover="showTip(event, 'fs19', 121)" class="i">Config</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs51', 122)" onmouseover="showTip(event, 'fs51', 122)" class="i">lowerCaseConfigNameCanonicalizer</span> <span class="k">with</span>
-    | <span onmouseout="hideTip(event, 'fs29', 123)" onmouseover="showTip(event, 'fs29', 123)" class="p">Ok</span> <span onmouseout="hideTip(event, 'fs28', 124)" onmouseover="showTip(event, 'fs28', 124)" class="i">config</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 125)" onmouseover="showTip(event, 'fs28', 125)" class="i">config</span>
-    | <span onmouseout="hideTip(event, 'fs30', 126)" onmouseover="showTip(event, 'fs30', 126)" class="p">Error</span> <span onmouseout="hideTip(event, 'fs31', 127)" onmouseover="showTip(event, 'fs31', 127)" class="i">error</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs32', 128)" onmouseover="showTip(event, 'fs32', 128)" class="f">failwithf</span> <span class="s">&quot;Error : </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs31', 129)" onmouseover="showTip(event, 'fs31', 129)" class="i">error</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 123)" onmouseover="showTip(event, 'fs2', 123)" class="f">main</span> <span onmouseout="hideTip(event, 'fs3', 124)" onmouseover="showTip(event, 'fs3', 124)" class="i">argv</span> <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 125)" onmouseover="showTip(event, 'fs28', 125)" class="i">config</span> <span class="o">=</span> 
+    <span class="k">match</span> <span class="i">EnvConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 126)" onmouseover="showTip(event, 'fs19', 126)" class="i">Config</span><span class="o">&gt;</span> <span onmouseout="hideTip(event, 'fs53', 127)" onmouseover="showTip(event, 'fs53', 127)" class="i">lowerCaseConfigNameCanonicalizer</span> <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs29', 128)" onmouseover="showTip(event, 'fs29', 128)" class="p">Ok</span> <span onmouseout="hideTip(event, 'fs28', 129)" onmouseover="showTip(event, 'fs28', 129)" class="i">config</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 130)" onmouseover="showTip(event, 'fs28', 130)" class="i">config</span>
+    | <span onmouseout="hideTip(event, 'fs30', 131)" onmouseover="showTip(event, 'fs30', 131)" class="p">Error</span> <span onmouseout="hideTip(event, 'fs31', 132)" onmouseover="showTip(event, 'fs31', 132)" class="i">error</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs32', 133)" onmouseover="showTip(event, 'fs32', 133)" class="f">failwithf</span> <span class="s">&quot;Error : </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs31', 134)" onmouseover="showTip(event, 'fs31', 134)" class="i">error</span>
   <span class="n">0</span>
 </code></pre></td>
 </tr>
@@ -462,7 +480,7 @@ List of Discriminated Union Types also supported!</p>
 <p>FsConfig also supports reading value directly by explicitly specifying the environment variable name</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="i">EnvConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs57', 130)" onmouseover="showTip(event, 'fs57', 130)" class="i">decimal</span><span class="o">&gt;</span> <span class="s">&quot;MY_APP_INITIAL_BALANCE&quot;</span> <span class="c">// Result&lt;decimal, ConfigParseError&gt;</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="i">EnvConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs59', 135)" onmouseover="showTip(event, 'fs59', 135)" class="i">decimal</span><span class="o">&gt;</span> <span class="s">&quot;MY_APP_INITIAL_BALANCE&quot;</span> <span class="c">// Result&lt;decimal, ConfigParseError&gt;</span>
 </code></pre></td>
 </tr>
 </table>
@@ -477,8 +495,8 @@ List of Discriminated Union Types also supported!</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 <span class="l">2: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs58', 131)" onmouseover="showTip(event, 'fs58', 131)" class="i">configurationRoot</span> <span class="o">:</span> <span class="i">IConfigurationRoot</span> <span class="o">=</span> <span class="s">&quot;{...}&quot;</span>
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 132)" onmouseover="showTip(event, 'fs59', 132)" class="i">appConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="i">AppConfig</span>(<span onmouseout="hideTip(event, 'fs58', 133)" onmouseover="showTip(event, 'fs58', 133)" class="i">configurationRoot</span>)
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 136)" onmouseover="showTip(event, 'fs60', 136)" class="i">configurationRoot</span> <span class="o">:</span> <span class="i">IConfigurationRoot</span> <span class="o">=</span> <span class="s">&quot;{...}&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs61', 137)" onmouseover="showTip(event, 'fs61', 137)" class="i">appConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="i">AppConfig</span>(<span onmouseout="hideTip(event, 'fs60', 138)" onmouseover="showTip(event, 'fs60', 138)" class="i">configurationRoot</span>)
 </code></pre></td>
 </tr>
 </table>
@@ -514,34 +532,34 @@ List of Discriminated Union Types also supported!</p>
 <span class="l">29: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Reading Primitive</span>
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 134)" onmouseover="showTip(event, 'fs60', 134)" class="i">result</span> <span class="o">=</span> 
-  <span onmouseout="hideTip(event, 'fs59', 135)" onmouseover="showTip(event, 'fs59', 135)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs44', 136)" onmouseover="showTip(event, 'fs44', 136)" class="i">int</span><span class="o">&gt;</span> <span class="s">&quot;processId&quot;</span> <span class="c">// Result&lt;int, ConfigParseError&gt;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 139)" onmouseover="showTip(event, 'fs62', 139)" class="i">result</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs61', 140)" onmouseover="showTip(event, 'fs61', 140)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs44', 141)" onmouseover="showTip(event, 'fs44', 141)" class="i">int</span><span class="o">&gt;</span> <span class="s">&quot;processId&quot;</span> <span class="c">// Result&lt;int, ConfigParseError&gt;</span>
 
 <span class="c">// A Sample Record</span>
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs61', 137)" onmouseover="showTip(event, 'fs61', 137)" class="t">SampleConfig</span> <span class="o">=</span> {
-  <span onmouseout="hideTip(event, 'fs62', 138)" onmouseover="showTip(event, 'fs62', 138)" class="i">ProcessId</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs44', 139)" onmouseover="showTip(event, 'fs44', 139)" class="t">int</span>
-  <span onmouseout="hideTip(event, 'fs63', 140)" onmouseover="showTip(event, 'fs63', 140)" class="i">ProcessName</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 141)" onmouseover="showTip(event, 'fs16', 141)" class="t">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs63', 142)" onmouseover="showTip(event, 'fs63', 142)" class="t">SampleConfig</span> <span class="o">=</span> {
+  <span onmouseout="hideTip(event, 'fs64', 143)" onmouseover="showTip(event, 'fs64', 143)" class="i">ProcessId</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs44', 144)" onmouseover="showTip(event, 'fs44', 144)" class="t">int</span>
+  <span onmouseout="hideTip(event, 'fs65', 145)" onmouseover="showTip(event, 'fs65', 145)" class="i">ProcessName</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 146)" onmouseover="showTip(event, 'fs16', 146)" class="t">string</span>
 }
 
 <span class="c">// Reading a Record type</span>
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 142)" onmouseover="showTip(event, 'fs60', 142)" class="i">result</span> <span class="o">=</span> 
-  <span onmouseout="hideTip(event, 'fs59', 143)" onmouseover="showTip(event, 'fs59', 143)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs61', 144)" onmouseover="showTip(event, 'fs61', 144)" class="i">SampleConfig</span><span class="o">&gt;</span> () <span class="c">// Result&lt;SampleConfig, ConfigParseError&gt;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 147)" onmouseover="showTip(event, 'fs62', 147)" class="i">result</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs61', 148)" onmouseover="showTip(event, 'fs61', 148)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs63', 149)" onmouseover="showTip(event, 'fs63', 149)" class="i">SampleConfig</span><span class="o">&gt;</span> () <span class="c">// Result&lt;SampleConfig, ConfigParseError&gt;</span>
 
 <span class="c">// A Sample Nested Record</span>
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs47', 145)" onmouseover="showTip(event, 'fs47', 145)" class="i">AwsConfig</span> <span class="o">=</span> {
-  <span class="i">AccessKeyId</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 146)" onmouseover="showTip(event, 'fs16', 146)" class="i">string</span>
-  <span class="i">DefaultRegion</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 147)" onmouseover="showTip(event, 'fs16', 147)" class="i">string</span>
-  <span class="i">SecretAccessKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 148)" onmouseover="showTip(event, 'fs16', 148)" class="i">string</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs47', 150)" onmouseover="showTip(event, 'fs47', 150)" class="i">AwsConfig</span> <span class="o">=</span> {
+  <span class="i">AccessKeyId</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 151)" onmouseover="showTip(event, 'fs16', 151)" class="i">string</span>
+  <span class="i">DefaultRegion</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 152)" onmouseover="showTip(event, 'fs16', 152)" class="i">string</span>
+  <span class="i">SecretAccessKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 153)" onmouseover="showTip(event, 'fs16', 153)" class="i">string</span>
 }
 
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 149)" onmouseover="showTip(event, 'fs19', 149)" class="i">Config</span> <span class="o">=</span> {
-  <span class="i">MagicNumber</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs44', 150)" onmouseover="showTip(event, 'fs44', 150)" class="i">int</span>
-  <span class="i">Aws</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs47', 151)" onmouseover="showTip(event, 'fs47', 151)" class="i">AwsConfig</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 154)" onmouseover="showTip(event, 'fs19', 154)" class="i">Config</span> <span class="o">=</span> {
+  <span class="i">MagicNumber</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs44', 155)" onmouseover="showTip(event, 'fs44', 155)" class="i">int</span>
+  <span class="i">Aws</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs47', 156)" onmouseover="showTip(event, 'fs47', 156)" class="i">AwsConfig</span>
 }
 
 <span class="c">// Reading a Nested Record type</span>
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 152)" onmouseover="showTip(event, 'fs60', 152)" class="i">result</span> <span class="o">=</span> 
-  <span onmouseout="hideTip(event, 'fs59', 153)" onmouseover="showTip(event, 'fs59', 153)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 154)" onmouseover="showTip(event, 'fs19', 154)" class="i">Config</span><span class="o">&gt;</span> () <span class="c">// Result&lt;Config, ConfigParseError&gt;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 157)" onmouseover="showTip(event, 'fs62', 157)" class="i">result</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs61', 158)" onmouseover="showTip(event, 'fs61', 158)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 159)" onmouseover="showTip(event, 'fs19', 159)" class="i">Config</span><span class="o">&gt;</span> () <span class="c">// Result&lt;Config, ConfigParseError&gt;</span>
 </code></pre></td>
 </tr>
 </table>
@@ -584,13 +602,13 @@ List of Discriminated Union Types also supported!</p>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Requires NuGet package</span>
 <span class="c">// Microsoft.Extensions.Configuration.Json</span>
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs64', 155)" onmouseover="showTip(event, 'fs64', 155)" class="i">configurationRoot</span> <span class="o">=</span>  
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs66', 160)" onmouseover="showTip(event, 'fs66', 160)" class="i">configurationRoot</span> <span class="o">=</span>  
   <span class="i">ConfigurationBuilder</span>()<span class="o">.</span><span class="i">SetBasePath</span>(<span class="i">Directory</span><span class="o">.</span><span class="i">GetCurrentDirectory</span>())
     <span class="o">.</span><span class="i">AddJsonFile</span>(<span class="s">&quot;settings.json&quot;</span>)<span class="o">.</span><span class="i">Build</span>()
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 156)" onmouseover="showTip(event, 'fs59', 156)" class="i">appConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="i">AppConfig</span>(<span onmouseout="hideTip(event, 'fs64', 157)" onmouseover="showTip(event, 'fs64', 157)" class="i">configurationRoot</span>)
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 158)" onmouseover="showTip(event, 'fs60', 158)" class="i">result</span> <span class="o">=</span> 
-  <span onmouseout="hideTip(event, 'fs59', 159)" onmouseover="showTip(event, 'fs59', 159)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 160)" onmouseover="showTip(event, 'fs19', 160)" class="i">Config</span><span class="o">&gt;</span> () <span class="c">// Result&lt;Config, ConfigParseError&gt;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs61', 161)" onmouseover="showTip(event, 'fs61', 161)" class="i">appConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="i">AppConfig</span>(<span onmouseout="hideTip(event, 'fs66', 162)" onmouseover="showTip(event, 'fs66', 162)" class="i">configurationRoot</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 163)" onmouseover="showTip(event, 'fs62', 163)" class="i">result</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs61', 164)" onmouseover="showTip(event, 'fs61', 164)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 165)" onmouseover="showTip(event, 'fs19', 165)" class="i">Config</span><span class="o">&gt;</span> () <span class="c">// Result&lt;Config, ConfigParseError&gt;</span>
 </code></pre></td>
 </tr>
 </table>
@@ -632,13 +650,13 @@ List of Discriminated Union Types also supported!</p>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Requires NuGet package</span>
 <span class="c">// Microsoft.Extensions.Configuration.Xml</span>
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs64', 161)" onmouseover="showTip(event, 'fs64', 161)" class="i">configurationRoot</span> <span class="o">=</span>  
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs66', 166)" onmouseover="showTip(event, 'fs66', 166)" class="i">configurationRoot</span> <span class="o">=</span>  
   <span class="i">ConfigurationBuilder</span>()<span class="o">.</span><span class="i">SetBasePath</span>(<span class="i">Directory</span><span class="o">.</span><span class="i">GetCurrentDirectory</span>())
     <span class="o">.</span><span class="i">AddXmlFile</span>(<span class="s">&quot;settings.xml&quot;</span>)<span class="o">.</span><span class="i">Build</span>()
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 162)" onmouseover="showTip(event, 'fs59', 162)" class="i">appConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="i">AppConfig</span>(<span onmouseout="hideTip(event, 'fs64', 163)" onmouseover="showTip(event, 'fs64', 163)" class="i">configurationRoot</span>)
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 164)" onmouseover="showTip(event, 'fs60', 164)" class="i">result</span> <span class="o">=</span> 
-  <span onmouseout="hideTip(event, 'fs59', 165)" onmouseover="showTip(event, 'fs59', 165)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 166)" onmouseover="showTip(event, 'fs19', 166)" class="i">Config</span><span class="o">&gt;</span> () <span class="c">// Result&lt;Config, ConfigParseError&gt;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs61', 167)" onmouseover="showTip(event, 'fs61', 167)" class="i">appConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="i">AppConfig</span>(<span onmouseout="hideTip(event, 'fs66', 168)" onmouseover="showTip(event, 'fs66', 168)" class="i">configurationRoot</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 169)" onmouseover="showTip(event, 'fs62', 169)" class="i">result</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs61', 170)" onmouseover="showTip(event, 'fs61', 170)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 171)" onmouseover="showTip(event, 'fs19', 171)" class="i">Config</span><span class="o">&gt;</span> () <span class="c">// Result&lt;Config, ConfigParseError&gt;</span>
 </code></pre></td>
 </tr>
 </table>
@@ -676,13 +694,13 @@ SecretAccessKey=secret123
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="c">// Requires NuGet package</span>
 <span class="c">// Microsoft.Extensions.Configuration.Ini</span>
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs64', 167)" onmouseover="showTip(event, 'fs64', 167)" class="i">configurationRoot</span> <span class="o">=</span>  
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs66', 172)" onmouseover="showTip(event, 'fs66', 172)" class="i">configurationRoot</span> <span class="o">=</span>  
   <span class="i">ConfigurationBuilder</span>()<span class="o">.</span><span class="i">SetBasePath</span>(<span class="i">Directory</span><span class="o">.</span><span class="i">GetCurrentDirectory</span>())
     <span class="o">.</span><span class="i">AddIniFile</span>(<span class="s">&quot;settings.ini&quot;</span>)<span class="o">.</span><span class="i">Build</span>()
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs59', 168)" onmouseover="showTip(event, 'fs59', 168)" class="i">appConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="i">AppConfig</span>(<span onmouseout="hideTip(event, 'fs64', 169)" onmouseover="showTip(event, 'fs64', 169)" class="i">configurationRoot</span>)
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs60', 170)" onmouseover="showTip(event, 'fs60', 170)" class="i">result</span> <span class="o">=</span> 
-  <span onmouseout="hideTip(event, 'fs59', 171)" onmouseover="showTip(event, 'fs59', 171)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 172)" onmouseover="showTip(event, 'fs19', 172)" class="i">Config</span><span class="o">&gt;</span> () <span class="c">// Result&lt;Config, ConfigParseError&gt;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs61', 173)" onmouseover="showTip(event, 'fs61', 173)" class="i">appConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="i">AppConfig</span>(<span onmouseout="hideTip(event, 'fs66', 174)" onmouseover="showTip(event, 'fs66', 174)" class="i">configurationRoot</span>)
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs62', 175)" onmouseover="showTip(event, 'fs62', 175)" class="i">result</span> <span class="o">=</span> 
+  <span onmouseout="hideTip(event, 'fs61', 176)" onmouseover="showTip(event, 'fs61', 176)" class="i">appConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 177)" onmouseover="showTip(event, 'fs19', 177)" class="i">Config</span><span class="o">&gt;</span> () <span class="c">// Result&lt;Config, ConfigParseError&gt;</span>
 </code></pre></td>
 </tr>
 </table>
@@ -707,22 +725,22 @@ SecretAccessKey=secret123
 <span class="l">16: </span>
 <span class="l">17: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs47', 173)" onmouseover="showTip(event, 'fs47', 173)" class="i">AwsConfig</span> <span class="o">=</span> {
-  <span class="i">AccessKeyId</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 174)" onmouseover="showTip(event, 'fs16', 174)" class="i">string</span>
-  <span class="i">DefaultRegion</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 175)" onmouseover="showTip(event, 'fs16', 175)" class="i">string</span>
-  <span class="i">SecretAccessKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 176)" onmouseover="showTip(event, 'fs16', 176)" class="i">string</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">type</span> <span onmouseout="hideTip(event, 'fs47', 178)" onmouseover="showTip(event, 'fs47', 178)" class="i">AwsConfig</span> <span class="o">=</span> {
+  <span class="i">AccessKeyId</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 179)" onmouseover="showTip(event, 'fs16', 179)" class="i">string</span>
+  <span class="i">DefaultRegion</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 180)" onmouseover="showTip(event, 'fs16', 180)" class="i">string</span>
+  <span class="i">SecretAccessKey</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs16', 181)" onmouseover="showTip(event, 'fs16', 181)" class="i">string</span>
 }
 
-<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 177)" onmouseover="showTip(event, 'fs19', 177)" class="i">Config</span> <span class="o">=</span> {
-  <span class="i">Port</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs13', 178)" onmouseover="showTip(event, 'fs13', 178)" class="i">uint16</span>
-  <span class="i">Aws</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs47', 179)" onmouseover="showTip(event, 'fs47', 179)" class="i">AwsConfig</span>
+<span class="k">type</span> <span onmouseout="hideTip(event, 'fs19', 182)" onmouseover="showTip(event, 'fs19', 182)" class="i">Config</span> <span class="o">=</span> {
+  <span class="i">Port</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs13', 183)" onmouseover="showTip(event, 'fs13', 183)" class="i">uint16</span>
+  <span class="i">Aws</span> <span class="o">:</span> <span onmouseout="hideTip(event, 'fs47', 184)" onmouseover="showTip(event, 'fs47', 184)" class="i">AwsConfig</span>
 }
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 180)" onmouseover="showTip(event, 'fs2', 180)" class="f">main</span> <span onmouseout="hideTip(event, 'fs3', 181)" onmouseover="showTip(event, 'fs3', 181)" class="i">argv</span> <span class="o">=</span>
-  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 182)" onmouseover="showTip(event, 'fs28', 182)" class="i">config</span> <span class="o">=</span> 
-    <span class="k">match</span> <span class="i">AppConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 183)" onmouseover="showTip(event, 'fs19', 183)" class="i">Config</span><span class="o">&gt;</span>() <span class="k">with</span>
-    | <span onmouseout="hideTip(event, 'fs29', 184)" onmouseover="showTip(event, 'fs29', 184)" class="p">Ok</span> <span onmouseout="hideTip(event, 'fs28', 185)" onmouseover="showTip(event, 'fs28', 185)" class="i">config</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 186)" onmouseover="showTip(event, 'fs28', 186)" class="i">config</span>
-    | <span onmouseout="hideTip(event, 'fs30', 187)" onmouseover="showTip(event, 'fs30', 187)" class="p">Error</span> <span onmouseout="hideTip(event, 'fs31', 188)" onmouseover="showTip(event, 'fs31', 188)" class="i">error</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs32', 189)" onmouseover="showTip(event, 'fs32', 189)" class="f">failwithf</span> <span class="s">&quot;Error : </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs31', 190)" onmouseover="showTip(event, 'fs31', 190)" class="i">error</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs2', 185)" onmouseover="showTip(event, 'fs2', 185)" class="f">main</span> <span onmouseout="hideTip(event, 'fs3', 186)" onmouseover="showTip(event, 'fs3', 186)" class="i">argv</span> <span class="o">=</span>
+  <span class="k">let</span> <span onmouseout="hideTip(event, 'fs28', 187)" onmouseover="showTip(event, 'fs28', 187)" class="i">config</span> <span class="o">=</span> 
+    <span class="k">match</span> <span class="i">AppConfig</span><span class="o">.</span><span class="i">Get</span><span class="o">&lt;</span><span onmouseout="hideTip(event, 'fs19', 188)" onmouseover="showTip(event, 'fs19', 188)" class="i">Config</span><span class="o">&gt;</span>() <span class="k">with</span>
+    | <span onmouseout="hideTip(event, 'fs29', 189)" onmouseover="showTip(event, 'fs29', 189)" class="p">Ok</span> <span onmouseout="hideTip(event, 'fs28', 190)" onmouseover="showTip(event, 'fs28', 190)" class="i">config</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs28', 191)" onmouseover="showTip(event, 'fs28', 191)" class="i">config</span>
+    | <span onmouseout="hideTip(event, 'fs30', 192)" onmouseover="showTip(event, 'fs30', 192)" class="p">Error</span> <span onmouseout="hideTip(event, 'fs31', 193)" onmouseover="showTip(event, 'fs31', 193)" class="i">error</span> <span class="k">-&gt;</span> <span onmouseout="hideTip(event, 'fs32', 194)" onmouseover="showTip(event, 'fs32', 194)" class="f">failwithf</span> <span class="s">&quot;Error : </span><span class="pf">%A</span><span class="s">&quot;</span> <span onmouseout="hideTip(event, 'fs31', 195)" onmouseover="showTip(event, 'fs31', 195)" class="i">error</span>
   <span class="n">0</span>
 </code></pre></td>
 </tr>
@@ -795,20 +813,22 @@ redistribution for both commercial and non-commercial purposes. For more informa
 <div class="tip" id="fs48">AwsConfig.AccessKeyId: string</div>
 <div class="tip" id="fs49">AwsConfig.DefaultRegion: string</div>
 <div class="tip" id="fs50">AwsConfig.SecretAccessKey: string</div>
-<div class="tip" id="fs51">val lowerCaseConfigNameCanonicalizer : &#39;a -&gt; name:string -&gt; &#39;b<br /><br />Full name: Index.lowerCaseConfigNameCanonicalizer</div>
-<div class="tip" id="fs52">val name : string</div>
-<div class="tip" id="fs53">String.ToLowerInvariant() : string</div>
-<div class="tip" id="fs54">Multiple items<br />type String =<br />&#160;&#160;new : value:char -&gt; string + 8 overloads<br />&#160;&#160;member Chars : int -&gt; char<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;member Contains : value:string -&gt; bool<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EndsWith : value:string -&gt; bool + 2 overloads<br />&#160;&#160;member Equals : obj:obj -&gt; bool + 2 overloads<br />&#160;&#160;member GetEnumerator : unit -&gt; CharEnumerator<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.String<br /><br />--------------------<br />String(value: nativeptr&lt;char&gt;) : unit<br />String(value: nativeptr&lt;sbyte&gt;) : unit<br />String(value: char []) : unit<br />String(value: ReadOnlySpan&lt;char&gt;) : unit<br />String(c: char, count: int) : unit<br />String(value: nativeptr&lt;char&gt;, startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int) : unit<br />String(value: char [], startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int, enc: Text.Encoding) : unit</div>
-<div class="tip" id="fs55">String.IsNullOrEmpty(value: string) : bool</div>
-<div class="tip" id="fs56">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
-<div class="tip" id="fs57">Multiple items<br />val decimal : value:&#39;T -&gt; decimal (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.decimal<br /><br />--------------------<br />type decimal = Decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal<br /><br />--------------------<br />type decimal&lt;&#39;Measure&gt; = decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal&lt;_&gt;</div>
-<div class="tip" id="fs58">val configurationRoot : string<br /><br />Full name: Index.configurationRoot</div>
-<div class="tip" id="fs59">val appConfig : obj<br /><br />Full name: Index.appConfig</div>
-<div class="tip" id="fs60">val result : obj<br /><br />Full name: Index.result</div>
-<div class="tip" id="fs61">type SampleConfig =<br />&#160;&#160;{ProcessId: int;<br />&#160;&#160;&#160;ProcessName: string;}<br /><br />Full name: Index.SampleConfig</div>
-<div class="tip" id="fs62">SampleConfig.ProcessId: int</div>
-<div class="tip" id="fs63">SampleConfig.ProcessName: string</div>
-<div class="tip" id="fs64">val configurationRoot : obj<br /><br />Full name: Index.configurationRoot</div>
+<div class="tip" id="fs51">Multiple items<br />type DefaultValueAttribute =<br />&#160;&#160;inherit Attribute<br />&#160;&#160;new : unit -&gt; DefaultValueAttribute<br />&#160;&#160;new : check:bool -&gt; DefaultValueAttribute<br />&#160;&#160;member Check : bool<br /><br />Full name: Microsoft.FSharp.Core.DefaultValueAttribute<br /><br />--------------------<br />new : unit -&gt; DefaultValueAttribute<br />new : check:bool -&gt; DefaultValueAttribute</div>
+<div class="tip" id="fs52">Multiple items<br />val int16 : value:&#39;T -&gt; int16 (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.int16<br /><br />--------------------<br />type int16 = Int16<br /><br />Full name: Microsoft.FSharp.Core.int16<br /><br />--------------------<br />type int16&lt;&#39;Measure&gt; = int16<br /><br />Full name: Microsoft.FSharp.Core.int16&lt;_&gt;</div>
+<div class="tip" id="fs53">val lowerCaseConfigNameCanonicalizer : &#39;a -&gt; name:string -&gt; &#39;b<br /><br />Full name: Index.lowerCaseConfigNameCanonicalizer</div>
+<div class="tip" id="fs54">val name : string</div>
+<div class="tip" id="fs55">String.ToLowerInvariant() : string</div>
+<div class="tip" id="fs56">Multiple items<br />type String =<br />&#160;&#160;new : value:char -&gt; string + 8 overloads<br />&#160;&#160;member Chars : int -&gt; char<br />&#160;&#160;member Clone : unit -&gt; obj<br />&#160;&#160;member CompareTo : value:obj -&gt; int + 1 overload<br />&#160;&#160;member Contains : value:string -&gt; bool<br />&#160;&#160;member CopyTo : sourceIndex:int * destination:char[] * destinationIndex:int * count:int -&gt; unit<br />&#160;&#160;member EndsWith : value:string -&gt; bool + 2 overloads<br />&#160;&#160;member Equals : obj:obj -&gt; bool + 2 overloads<br />&#160;&#160;member GetEnumerator : unit -&gt; CharEnumerator<br />&#160;&#160;member GetHashCode : unit -&gt; int<br />&#160;&#160;...<br /><br />Full name: System.String<br /><br />--------------------<br />String(value: nativeptr&lt;char&gt;) : unit<br />String(value: nativeptr&lt;sbyte&gt;) : unit<br />String(value: char []) : unit<br />String(value: ReadOnlySpan&lt;char&gt;) : unit<br />String(c: char, count: int) : unit<br />String(value: nativeptr&lt;char&gt;, startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int) : unit<br />String(value: char [], startIndex: int, length: int) : unit<br />String(value: nativeptr&lt;sbyte&gt;, startIndex: int, length: int, enc: Text.Encoding) : unit</div>
+<div class="tip" id="fs57">String.IsNullOrEmpty(value: string) : bool</div>
+<div class="tip" id="fs58">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T<br /><br />Full name: Microsoft.FSharp.Core.ExtraTopLevelOperators.sprintf</div>
+<div class="tip" id="fs59">Multiple items<br />val decimal : value:&#39;T -&gt; decimal (requires member op_Explicit)<br /><br />Full name: Microsoft.FSharp.Core.Operators.decimal<br /><br />--------------------<br />type decimal = Decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal<br /><br />--------------------<br />type decimal&lt;&#39;Measure&gt; = decimal<br /><br />Full name: Microsoft.FSharp.Core.decimal&lt;_&gt;</div>
+<div class="tip" id="fs60">val configurationRoot : string<br /><br />Full name: Index.configurationRoot</div>
+<div class="tip" id="fs61">val appConfig : obj<br /><br />Full name: Index.appConfig</div>
+<div class="tip" id="fs62">val result : obj<br /><br />Full name: Index.result</div>
+<div class="tip" id="fs63">type SampleConfig =<br />&#160;&#160;{ProcessId: int;<br />&#160;&#160;&#160;ProcessName: string;}<br /><br />Full name: Index.SampleConfig</div>
+<div class="tip" id="fs64">SampleConfig.ProcessId: int</div>
+<div class="tip" id="fs65">SampleConfig.ProcessName: string</div>
+<div class="tip" id="fs66">val configurationRoot : obj<br /><br />Full name: Index.configurationRoot</div>
 
         </div>
         <div class="span3">
