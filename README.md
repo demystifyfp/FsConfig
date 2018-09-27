@@ -307,7 +307,7 @@ EnvConfig.Get<decimal> "MY_APP_INITIAL_BALANCE" // Result<decimal, ConfigParseEr
 
 FsConfig supports App Config for both DotNet Core and Non DotNet Core Applications. 
 
-* [DotNet Core Applications](#dotnet-core-configuration) (Supported from V2.0.0 or above)
+* [DotNet Core Applications](#dotnet-core-configuration-supported-from-v200-or-above) (Supported from V2.0.0 or above)
 
 * [Non DotNet Core Applications](#appsettings-only-supported-in-v006-or-below) (Only Supported in V0.0.6 or below)
 
