@@ -1,3 +1,6 @@
+#### 2.1.2 - May 24, 2019
+* Update dependencies
+
 #### 2.0.2 - Aug 12, 2018
 * Adds Default Value Attribute.
 
