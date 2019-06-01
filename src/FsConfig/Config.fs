@@ -147,8 +147,8 @@ module internal Core =
   let parseFSharpOption<'T> name value (fsharpOption : IShapeFSharpOption) =
     let wrap (p : ConfigParseResult<'a>) =
       unbox<ConfigParseResult<'T>> p
-    fsharpOption.Accept {
-      new IFSharpOptionVisitor<ConfigParseResult<'T>> with
+    fsharpOption.Element.Accept {
+      new ITypeVisitor<ConfigParseResult<'T>> with
         member __.Visit<'t>() =
           match value with
           | None -> 
@@ -182,8 +182,8 @@ module internal Core =
   let parseFSharpList<'T> name value (fsharpList: IShapeFSharpList) (SplitCharacter splitCharacter) =
     let wrap (p : ConfigParseResult<'a>) =
       unbox<ConfigParseResult<'T>> p
-    fsharpList.Accept {
-      new IFSharpListVisitor<ConfigParseResult<'T>> with
+    fsharpList.Element.Accept {
+      new ITypeVisitor<ConfigParseResult<'T>> with
         member __.Visit<'t>() =
           match value with
           | None -> 
@@ -264,10 +264,10 @@ module internal Core =
           }
 
           field.Accept {
-            new IWriteMemberVisitor<'T, ConfigParseResult<('T -> 'T) list>> with
-              member __.Visit (shape : ShapeWriteMember<'T, 'FieldType>) =
+            new IMemberVisitor<'T, ConfigParseResult<('T -> 'T) list>> with
+              member __.Visit (shape : ShapeMember<'T, 'FieldType>) =
                 match parseInternal<'FieldType> configReader fieldNameCanonicalizer args with
-                | Ok fieldValue -> (fun record -> shape.Inject record fieldValue) :: xs |> Ok
+                | Ok fieldValue -> (fun record -> shape.Set record fieldValue) :: xs |> Ok
                 | Error e -> Error e
           }
        ) (Ok []) 

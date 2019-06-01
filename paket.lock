@@ -55,7 +55,7 @@ NUGET
       Microsoft.NETCore.Platforms (>= 1.1)
       Microsoft.NETCore.Targets (>= 1.1)
       System.Runtime (>= 4.3)
-    TypeShape (6.1.2)
+    TypeShape (7.0)
       FSharp.Core (>= 4.3.4)
       System.Reflection.Emit.Lightweight (>= 4.3)
 
