@@ -1,3 +1,6 @@
+#### 2.1.3 - Jun 9, 2019
+* Update TypeShape dependency. Credits [Rajiv](https://github.com/Rajivhost)
+
 #### 2.1.2 - May 24, 2019
 * Update dependencies
 
