@@ -5,8 +5,8 @@ open System.Reflection
 [<assembly: AssemblyTitleAttribute("FsConfig")>]
 [<assembly: AssemblyProductAttribute("FsConfig")>]
 [<assembly: AssemblyDescriptionAttribute("F# Libary for managing configuration data from environment variables and application config in a type-safe way")>]
-[<assembly: AssemblyVersionAttribute("2.1.3")>]
-[<assembly: AssemblyFileVersionAttribute("2.1.3")>]
+[<assembly: AssemblyVersionAttribute("2.1.4")>]
+[<assembly: AssemblyFileVersionAttribute("2.1.4")>]
 [<assembly: AssemblyConfigurationAttribute("Release")>]
 do ()
 
@@ -14,6 +14,6 @@ module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "FsConfig"
     let [<Literal>] AssemblyProduct = "FsConfig"
     let [<Literal>] AssemblyDescription = "F# Libary for managing configuration data from environment variables and application config in a type-safe way"
-    let [<Literal>] AssemblyVersion = "2.1.3"
-    let [<Literal>] AssemblyFileVersion = "2.1.3"
+    let [<Literal>] AssemblyVersion = "2.1.4"
+    let [<Literal>] AssemblyFileVersion = "2.1.4"
     let [<Literal>] AssemblyConfiguration = "Release"
