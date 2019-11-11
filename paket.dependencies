@@ -3,7 +3,7 @@ framework: netstandard2.0, netcoreapp2.0
 redirects: force
 
 nuget FSharp.Core >= 4.2.3
-nuget TypeShape >= 7.0.0 < 8.0
+nuget TypeShape >= 8.0.0
 nuget Microsoft.Extensions.Configuration
 
 group Build
