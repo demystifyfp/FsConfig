@@ -184,6 +184,16 @@ module ``Given required environment variables exists`` =
     test <@ EnvConfig.Get<Color> "ENV_ENUM_INT" = Ok Color.Red @>
     test <@ EnvConfig.Get<Color> "ENV_ENUM_FLAGS" = Ok expectedFlagOutput @>
 
+  [<Test>]
+  let ``get Enum should succeed case-insensitively`` () =
+    setEnvVar ("ENV_ENUM_STRING", "RED")
+    setEnvVar ("ENV_ENUM_FLAGS", "rEd, BlUe")
+    setEnvVar ("ENV_ENUM_INT", "0")
+    let expectedFlagOutput = Color.Red ||| Color.Blue
+    test <@ EnvConfig.Get<Color> "ENV_ENUM_STRING" = Ok Color.Red @>
+    test <@ EnvConfig.Get<Color> "ENV_ENUM_INT" = Ok Color.Red @>
+    test <@ EnvConfig.Get<Color> "ENV_ENUM_FLAGS" = Ok expectedFlagOutput @>
+    
   type Colors = {
     Colors : Color list
   }
@@ -193,6 +203,11 @@ module ``Given required environment variables exists`` =
     setEnvVar ("COLORS", "Red, Green, Blue")
     test <@ EnvConfig.Get<Colors> () = Ok {Colors = [Color.Red;Color.Green;Color.Blue]} @>
 
+  [<Test>]
+  let ``get Enum list should succeed case-insensitively`` () =
+    setEnvVar ("COLORS", "Red, GREEN, blue")
+    test <@ EnvConfig.Get<Colors> () = Ok {Colors = [Color.Red;Color.Green;Color.Blue]} @>
+    
   [<Test>]
   let ``get DU should succeed`` () =
     setEnvVar ("DU_COLOR", "Red")
