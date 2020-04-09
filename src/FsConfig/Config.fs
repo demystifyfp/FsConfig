@@ -112,7 +112,10 @@ module internal Core =
                                     and 'Enum : struct
                                     and 'Enum :> ValueType
                                     and 'Enum : (new : unit -> 'Enum)> () =
-          tryParse System.Enum.TryParse<'Enum> value |> wrap
+          
+          // cannot use tryParse as the function has a different signature with the ignoreCase option added                                    
+          let success, result = System.Enum.TryParse<'Enum>(value = value, ignoreCase = true)
+          wrap (if success then Some result else None)
     }
 
   let getTryParseFunc<'T> targetTypeShape =
