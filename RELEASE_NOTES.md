@@ -1,3 +1,9 @@
+#### 2.1.5 - Nov 11, 2019
+* Bump TypeShape version. Credits [Rajivhost](https://github.com/rajivhost)
+
+#### 2.1.4 - Oct 18, 2019
+* Restrict TypeShape dependency. Credits [Piaste](https://github.com/piaste)
+
 #### 2.1.3 - Jun 9, 2019
 * Update TypeShape dependency. Credits [Rajiv](https://github.com/Rajivhost)
 
