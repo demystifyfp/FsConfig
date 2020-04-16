@@ -193,6 +193,31 @@ module ``Given required environment variables exists`` =
     test <@ EnvConfig.Get<Color> "ENV_ENUM_STRING" = Ok Color.Red @>
     test <@ EnvConfig.Get<Color> "ENV_ENUM_INT" = Ok Color.Red @>
     test <@ EnvConfig.Get<Color> "ENV_ENUM_FLAGS" = Ok expectedFlagOutput @>
+
+    
+  [<Test>]
+  let ``get Enum should still be case-sensitive if it matters`` () =
+    setEnvVar ("ENV_ENUM_STRING", "PURPLE")
+    test <@ EnvConfig.Get<CaseSensitiveColor> "ENV_ENUM_STRING" = Ok CaseSensitiveColor.PURPLE @>
+    setEnvVar ("ENV_ENUM_STRING", "purple")
+    test <@ EnvConfig.Get<CaseSensitiveColor> "ENV_ENUM_STRING" = Ok CaseSensitiveColor.purple @>
+    setEnvVar ("ENV_ENUM_STRING", "PURPLE")
+    test <@ EnvConfig.Get<CaseSensitiveColor> "ENV_ENUM_STRING" = Ok CaseSensitiveColor.PURPLE @>
+    setEnvVar ("ENV_ENUM_STRING", "pURPLE")
+    test <@ EnvConfig.Get<CaseSensitiveColor> "ENV_ENUM_STRING" = Ok CaseSensitiveColor.pURPLE @>
+    
+    setEnvVar ("ENV_ENUM_INT", "0")
+    test <@ EnvConfig.Get<CaseSensitiveColor> "ENV_ENUM_INT" = Ok CaseSensitiveColor.Purple @>
+    setEnvVar ("ENV_ENUM_INT", "1")
+    test <@ EnvConfig.Get<CaseSensitiveColor> "ENV_ENUM_INT" = Ok CaseSensitiveColor.purple @>
+
+    setEnvVar ("ENV_ENUM_FLAGS", "Purple, pURPLE")
+    let expectedFlagOutput1 = CaseSensitiveColor.Purple ||| CaseSensitiveColor.pURPLE
+    test <@ EnvConfig.Get<CaseSensitiveColor> "ENV_ENUM_FLAGS" = Ok expectedFlagOutput1 @>
+    setEnvVar ("ENV_ENUM_FLAGS", "Purple, purple")
+    let expectedFlagOutput2 = CaseSensitiveColor.Purple ||| CaseSensitiveColor.purple
+    test <@ EnvConfig.Get<CaseSensitiveColor> "ENV_ENUM_FLAGS" = Ok expectedFlagOutput2 @>
+    
     
   type Colors = {
     Colors : Color list
@@ -217,6 +242,19 @@ module ``Given required environment variables exists`` =
   let ``get DU list should succeed`` () =
     setEnvVar ("DU_COLORS", "Red, Blue")
     test <@ EnvConfig.Get<DuListConfig> () = Ok {DuColors = [DuColor.Red; DuColor.Blue];} @>
+        
+  [<Test>]
+  let ``get DU should succeed case-insensitively`` () =
+    setEnvVar ("DU_COLOR", "red")
+    test <@ EnvConfig.Get<DuConfig> () = Ok {DuColor = DuColor.Red} @>
+        
+  [<Test>]
+  let ``get DU should succeed case-sensitively when it matters`` () =
+    setEnvVar ("CASE_SENSITIVE_DU_COLOR", "Purple")
+    test <@ EnvConfig.Get<CaseSensitiveDuConfig> () = Ok {CaseSensitiveDuColor = CaseSensitiveDuColor.Purple } @>
+    setEnvVar ("CASE_SENSITIVE_DU_COLOR", "PURPLE")
+    test <@ EnvConfig.Get<CaseSensitiveDuConfig> () = Ok {CaseSensitiveDuColor = CaseSensitiveDuColor.PURPLE} @>
+
   [<Test>]
   let ``get DU list should fail for invalid value`` () =
     setEnvVar ("DU_COLORS", "Red, Blue, NotAvailable")
