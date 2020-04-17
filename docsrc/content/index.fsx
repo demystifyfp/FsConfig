@@ -148,7 +148,8 @@ type Config = {
 Discriminated Union Type
 -----------------
 
-FsConfig supports Discriminated Union Types that has cases alone. 
+FsConfig supports Discriminated Union Types that has cases alone.
+
 
 *)
 
@@ -165,7 +166,62 @@ type Config = {
 
 > With this configuration declaration, FsConfig read the environment variable `CONSOLE_COLOR` and populates the `ConsoleColor` field of type `Color`.
 
-> List of Discriminated Union Types also supported!
+> List of Discriminated Union Types also supported: see under _List Type_
+
+Enumerations
+-----------------
+
+FsConfig can read enumerations using either their numeric values or their case names.
+
+The `[<Flags>]` attribute is also supported, using only comma-separated values.
+
+*)
+
+[<Flags>]
+type Status =
+| Inactive = 0
+| Receiving = 1
+| Transmitting = 2
+
+type Config = {
+  Status : Status
+}
+
+(**
+
+> This will result in the status `Receiving ||| Transmitting` 
+```bash
+STATUS=Receiving,Transmitting
+```
+
+> This will result in the status `Inactive` 
+```bash
+STATUS=0
+```
+
+Case sensitivity
+-----------------
+
+When parsing enumerations or discriminated unions, FsConfig will first look for an exact match (case sensitive), but if no matches are found, it will also accept a case-insensitive match.
+
+*)
+
+type LogLevel =
+| Debug = 0
+| Informative = 1
+| Warning = 2
+| Error = 3
+
+type Config = {
+  LogLevel : LogLevel
+}
+
+(**
+
+> This is a valid configuration
+```bash
+LOG_LEVEL=warning
+```
 
 List Type
 ---------
@@ -256,6 +312,7 @@ type Config = {
   [<DefaultValue("Server=localhost;Port=5432;Database=FsTweet;User Id=postgres;Password=test;")>]
   DbConnectionString: string
 }
+
 
 (**
 
