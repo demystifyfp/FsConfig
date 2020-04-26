@@ -63,14 +63,31 @@ module Common =
   | Blue = 1
   | Green = 2
   
+  
+  [<Flags>]
+  type CaseSensitiveColor =
+  | Purple = 0
+  | purple = 1
+  | PURPLE = 2
+  | pURPLE = 3
+
   type DuColor =
   | Red
   | Blue
   | Green
 
+  type CaseSensitiveDuColor =
+  | Purple
+  | PURPLE
+
   type DuConfig = {
     DuColor : DuColor
   }
+
+  type CaseSensitiveDuConfig = {
+    CaseSensitiveDuColor : CaseSensitiveDuColor
+  }
+
   type DuListConfig = {
     DuColors : DuColor list
   }

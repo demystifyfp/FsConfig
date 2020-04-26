@@ -100,19 +100,31 @@ module internal Core =
   let tryParseFSharpDU (shape : ShapeFSharpUnion<'T>) value =
     shape.UnionCases 
     |> Seq.tryFind (fun c -> c.CaseInfo.Name = value)
+    |> Option.orElseWith (fun () -> shape.UnionCases |> Seq.tryFind (fun c -> String.Equals(c.CaseInfo.Name, value, StringComparison.InvariantCultureIgnoreCase)))
     |> Option.map (fun c -> c.CreateUninitialized ())
 
 
   let tryParseEnum<'T> (enumShape : IShapeEnum) value = 
     let wrap (p : Option<'a>) =
       unbox<Option<'T>> p
+
     enumShape.Accept {
       new IEnumVisitor<'T option> with
         member __.Visit<'Enum, 'U when 'Enum : enum<'U>
                                     and 'Enum : struct
                                     and 'Enum :> ValueType
                                     and 'Enum : (new : unit -> 'Enum)> () =
-          tryParse System.Enum.TryParse<'Enum> value |> wrap
+          
+          // cannot use tryParse as the function has a different signature with the ignoreCase option added                                    
+          let success, result = System.Enum.TryParse<'Enum>(value = value, ignoreCase = false)
+
+          if success then Some result else 
+              
+              let caseInsensitiveSuccess, caseInsensitiveResult = System.Enum.TryParse<'Enum>(value = value, ignoreCase = true)
+
+              if caseInsensitiveSuccess then Some caseInsensitiveResult else None
+
+          |> wrap
     }
 
   let getTryParseFunc<'T> targetTypeShape =
