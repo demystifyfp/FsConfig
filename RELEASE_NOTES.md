@@ -1,3 +1,6 @@
+#### 2.1.7 - Nov 8, 2020
+* Bump Typeshape dependency
+
 #### 2.1.6 - Apr 26, 2020
 * Ignore case during Enum & DU serialization. Credits [Piaste](https://github.com/piaste)
 
