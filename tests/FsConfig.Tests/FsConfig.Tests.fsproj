@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
-    <IsPackable>false</IsPackable>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Common.fs" />
-    <Compile Include="EnvConfig.fs" />
-    <Compile Include="AppConfig.fs" />
-    <None Include="App.config" />
-    <None Include="paket.references" />
-    <Content Include="settings.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="settings.xml" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="settings.ini" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\FsConfig\FsConfig.fsproj" />
-  </ItemGroup>
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net5.0</TargetFrameworks>
+        <GenerateProgramFile>false</GenerateProgramFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../src/FsConfig/FsConfig.fsproj" />
+    </ItemGroup>
+        <ItemGroup>
+        <Compile Include="AssemblyInfo.fs" />
+        <Compile Include="Tests.fs" />
+        <Compile Include="Main.fs" />
+    </ItemGroup>
+    <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
+

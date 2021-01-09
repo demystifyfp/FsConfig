@@ -1,40 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <DebugType>portable</DebugType>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworks>net5.0</TargetFrameworks>
   </PropertyGroup>
+  <PropertyGroup>
+    <Title>FsConfig</Title>
+    <Description>FsConfig does the thing!</Description>
 
-  <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>TRACE;DEBUG;TYPESHAPE_EXPOSE;TYPESHAPE_EMIT;TYPESHAPE_EXPR</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Debug-NoEmit'">
-    <DefineConstants>TRACE;DEBUG;TYPESHAPE_EXPOSE;TYPESHAPE_EXPR</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DefineConstants>TRACE;TYPESHAPE_EXPOSE;TYPESHAPE_EMIT;TYPESHAPE_EXPR</DefineConstants>
+    <Optimize>true</Optimize>
+    <Tailcalls>true</Tailcalls>
+    
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release-NoEmit'">
-    <DefineConstants>TRACE;TYPESHAPE_EXPOSE;TYPESHAPE_EXPR</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)'=='netstandard2.0'">
-    <DefineConstants>NETSTANDARD2_0</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
-    <Compile Include="Config.fs" />
-    <Compile Include="EnvConfig.fs" />
-    <Compile Include="AppConfig.fs" />
-    <None Include="paket.references" />
-    <None Include="paket.template" />
-    <Content Include="App.config" />
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Library.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
+ 
