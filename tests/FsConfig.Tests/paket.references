@@ -7,3 +7,4 @@ group Test
   Microsoft.Extensions.Configuration.Xml
   Microsoft.Extensions.Configuration.JSON
   Microsoft.Extensions.Configuration.Ini
+  altcover
