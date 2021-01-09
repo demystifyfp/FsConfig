@@ -3,7 +3,7 @@
         <!-- summary is not migrated from project.json, but you can use the <Description> property for that if needed. -->
         <PackageTags>f#, fsharp</PackageTags>
         <PackageProjectUrl>https://github.com/queil/FsConfig</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/queil/FsConfig/blob/master/LICENSE.md</PackageLicenseUrl>
+        <PackageLicense>Unlicense</PackageLicense>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <RepositoryType>git</RepositoryType>
         <Authors>queil</Authors>
