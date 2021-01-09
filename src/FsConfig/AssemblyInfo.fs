@@ -4,20 +4,16 @@ open System.Reflection
 
 [<assembly: AssemblyTitleAttribute("FsConfig")>]
 [<assembly: AssemblyProductAttribute("FsConfig")>]
-[<assembly: AssemblyVersionAttribute("0.1.0")>]
-[<assembly: AssemblyMetadataAttribute("ReleaseDate","2017-03-17T00:00:00.0000000")>]
-[<assembly: AssemblyFileVersionAttribute("0.1.0")>]
-[<assembly: AssemblyInformationalVersionAttribute("0.1.0")>]
-[<assembly: AssemblyMetadataAttribute("ReleaseChannel","release")>]
-[<assembly: AssemblyMetadataAttribute("GitHash","bb8964b54bee133e9af64d316dc2cfee16df7f72")>]
+[<assembly: AssemblyDescriptionAttribute("F# Libary for managing configuration data from environment variables and application config in a type-safe way")>]
+[<assembly: AssemblyVersionAttribute("2.1.6")>]
+[<assembly: AssemblyFileVersionAttribute("2.1.6")>]
+[<assembly: AssemblyConfigurationAttribute("Release")>]
 do ()
 
 module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "FsConfig"
     let [<Literal>] AssemblyProduct = "FsConfig"
-    let [<Literal>] AssemblyVersion = "0.1.0"
-    let [<Literal>] AssemblyMetadata_ReleaseDate = "2017-03-17T00:00:00.0000000"
-    let [<Literal>] AssemblyFileVersion = "0.1.0"
-    let [<Literal>] AssemblyInformationalVersion = "0.1.0"
-    let [<Literal>] AssemblyMetadata_ReleaseChannel = "release"
-    let [<Literal>] AssemblyMetadata_GitHash = "bb8964b54bee133e9af64d316dc2cfee16df7f72"
+    let [<Literal>] AssemblyDescription = "F# Libary for managing configuration data from environment variables and application config in a type-safe way"
+    let [<Literal>] AssemblyVersion = "2.1.6"
+    let [<Literal>] AssemblyFileVersion = "2.1.6"
+    let [<Literal>] AssemblyConfiguration = "Release"

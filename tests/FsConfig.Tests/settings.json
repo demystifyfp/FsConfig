@@ -1,0 +1,11 @@
+{
+  "processId" : "123",
+  "processName" : "FsConfig",
+  "magicNumber" : 42,
+  "aws" : {
+    "accessKeyId" : "Id-123",
+    "defaultRegion" : "us-east-1",
+    "secretAccessKey" : "secret123"
+  },
+  "colors" : "Red,Green"
+}
