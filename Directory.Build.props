@@ -2,12 +2,12 @@
     <PropertyGroup>
         <!-- summary is not migrated from project.json, but you can use the <Description> property for that if needed. -->
         <PackageTags>f#, fsharp</PackageTags>
-        <PackageProjectUrl>https://github.com/queil/FsConfig</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/demystifyfp/FsConfig</PackageProjectUrl>
         <PackageLicense>Unlicense</PackageLicense>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <RepositoryType>git</RepositoryType>
-        <Authors>queil</Authors>
-        <RepositoryUrl>https://github.com/queil/FsConfig</RepositoryUrl>
+        <Authors>demystifyfp</Authors>
+        <RepositoryUrl>https://github.com/demystifyfp/FsConfig</RepositoryUrl>
         <!-- owners is not supported in MSBuild -->
     </PropertyGroup>
 </Project>
