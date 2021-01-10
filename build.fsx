@@ -1,3 +1,4 @@
+#nowarn "52" //https://github.com/fsharp/FAKE/issues/1803
 open Argu
 #load ".fake/build.fsx/intellisense.fsx"
 #load "docsTool/CLI.fs"
