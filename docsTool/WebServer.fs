@@ -96,9 +96,9 @@ module WebServer =
             else
                 failwithf "failed to open browser on current OS"
 
-    let serveDocs docsDir =
+    let serveDocs refreshWebpageEvent docsDir =
         async {
             waitForPortInUse hostname port
             sprintf "http://%s:%d/index.html" hostname port |> openBrowser
         } |> Async.Start
-        startWebserver docsDir (sprintf "http://%s:%d" hostname port)
+        startWebserver refreshWebpageEvent docsDir (sprintf "http://%s:%d" hostname port)
