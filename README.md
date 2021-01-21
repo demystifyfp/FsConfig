@@ -89,7 +89,7 @@ let main argv =
       | NotFound envVarName -> 
         failwithf "Environment variable %s not found" envVarName
       | BadValue (envVarName, value) ->
-        failwithf "Environment variable %s has invalid value" envVarName value
+        failwithf "Environment variable %s has invalid value %s" envVarName value
       | NotSupported msg -> 
         failwith msg
 ```
