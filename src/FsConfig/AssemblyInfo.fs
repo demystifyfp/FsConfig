@@ -4,16 +4,20 @@ open System.Reflection
 
 [<assembly: AssemblyTitleAttribute("FsConfig")>]
 [<assembly: AssemblyProductAttribute("FsConfig")>]
-[<assembly: AssemblyDescriptionAttribute("F# Libary for managing configuration data from environment variables and application config in a type-safe way")>]
-[<assembly: AssemblyVersionAttribute("2.1.6")>]
-[<assembly: AssemblyFileVersionAttribute("2.1.6")>]
-[<assembly: AssemblyConfigurationAttribute("Release")>]
+[<assembly: AssemblyVersionAttribute("3.0.0")>]
+[<assembly: AssemblyMetadataAttribute("ReleaseDate","2021-01-30T00:00:00.0000000+00:00")>]
+[<assembly: AssemblyFileVersionAttribute("3.0.0")>]
+[<assembly: AssemblyInformationalVersionAttribute("3.0.0")>]
+[<assembly: AssemblyMetadataAttribute("ReleaseChannel","release")>]
+[<assembly: AssemblyMetadataAttribute("GitHash","920c7039ae57a4d873568d6eadd2852f42744150")>]
 do ()
 
 module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "FsConfig"
     let [<Literal>] AssemblyProduct = "FsConfig"
-    let [<Literal>] AssemblyDescription = "F# Libary for managing configuration data from environment variables and application config in a type-safe way"
-    let [<Literal>] AssemblyVersion = "2.1.6"
-    let [<Literal>] AssemblyFileVersion = "2.1.6"
-    let [<Literal>] AssemblyConfiguration = "Release"
+    let [<Literal>] AssemblyVersion = "3.0.0"
+    let [<Literal>] AssemblyMetadata_ReleaseDate = "2021-01-30T00:00:00.0000000+00:00"
+    let [<Literal>] AssemblyFileVersion = "3.0.0"
+    let [<Literal>] AssemblyInformationalVersion = "3.0.0"
+    let [<Literal>] AssemblyMetadata_ReleaseChannel = "release"
+    let [<Literal>] AssemblyMetadata_GitHash = "920c7039ae57a4d873568d6eadd2852f42744150"
