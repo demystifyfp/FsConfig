@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
@@ -9,7 +9,6 @@
     <Compile Include="Common.fs" />
     <Compile Include="EnvConfig.fs" />
     <Compile Include="AppConfig.fs" />
-    <None Include="App.config" />
     <None Include="paket.references" />
     <Content Include="settings.json" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="settings.xml" CopyToOutputDirectory="PreserveNewest" />

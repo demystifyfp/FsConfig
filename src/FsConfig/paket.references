@@ -1,3 +1,4 @@
 FSharp.Core
 TypeShape
 Microsoft.Extensions.Configuration
+Microsoft.SourceLink.GitHub

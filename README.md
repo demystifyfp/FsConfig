@@ -1,4 +1,4 @@
-# FsConfig 
+# FsConfig
 
 FsConfig is a F# library for reading configuration data from environment variables and AppSettings with type safety
 

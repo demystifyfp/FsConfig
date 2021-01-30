@@ -34,7 +34,6 @@
     <Compile Include="AppConfig.fs" />
     <None Include="paket.references" />
     <None Include="paket.template" />
-    <Content Include="App.config" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
