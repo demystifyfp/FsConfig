@@ -18,7 +18,7 @@ open Fake.Core.TargetOperators
 open Fake.Api
 open Fake.BuildServer
 open Fantomas
-open Fantomas.FakeHelpers
+open Fantomas.Extras.FakeHelpers
 
 BuildServer.install [
     AppVeyor.Installer
@@ -612,7 +612,7 @@ let formatCode _ =
     |> Seq.collect id
     // Ignore AssemblyInfo
     |> Seq.filter(fun f -> f.EndsWith("AssemblyInfo.fs") |> not)
-    |> formatFilesAsync FormatConfig.FormatConfig.Default
+    |> formatFilesAsync
     |> Async.RunSynchronously
     |> Seq.iter(fun result ->
         match result with
