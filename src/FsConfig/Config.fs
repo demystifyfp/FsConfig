@@ -154,11 +154,6 @@ module internal Core =
       wrap (tryParseEnum<'T> enumShape)
     | Shape.FSharpUnion (:? ShapeFSharpUnion<'T> as shape) ->
       wrap (tryParseFSharpDU shape)
-    | Shape.Uri ->
-      wrap (fun s ->
-          try
-              Some (Uri s)
-          with _ -> None)
     | _ -> None
 
   let parseFSharpOption<'T> name value (fsharpOption : IShapeFSharpOption) =
