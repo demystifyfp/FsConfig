@@ -112,3 +112,11 @@ module Common =
     MagicNumber : int
     Aws : AwsConfig
   }
+
+  type ConfigWithUri = {
+    Uri : Uri
+  }
+
+  type ConfigWithInvalidUri = {
+    InvalidUri : Uri
+  }
