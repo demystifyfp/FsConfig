@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+
+## [3.1.0] - 2021-07-25
+
+### Added
+- Adds support for URIs by [aurecchia](https://github.com/aurecchia)
+
+### Changed
+- Various build tweaks
 - Update package description
 
 ## [3.0.0] - 2021-01-30
