@@ -8,6 +8,4 @@
     <SecretAccessKey>secret123</SecretAccessKey>
   </Aws>
   <Colors>Red,Green</Colors>
-  <Uri>https://example.com</Uri>
-  <InvalidUri>invalid</InvalidUri>
 </Settings>
