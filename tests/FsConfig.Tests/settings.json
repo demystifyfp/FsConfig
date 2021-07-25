@@ -7,5 +7,7 @@
     "defaultRegion" : "us-east-1",
     "secretAccessKey" : "secret123"
   },
-  "colors" : "Red,Green"
+  "colors" : "Red,Green",
+  "uri": "https://example.com",
+  "invalidUri": "invalid"
 }

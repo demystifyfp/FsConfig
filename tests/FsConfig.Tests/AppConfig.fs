@@ -1,5 +1,6 @@
 namespace AppConfig.Tests
 
+open System
 open NUnit.Framework
 open FsConfig
 open Swensen.Unquote.Assertions
@@ -25,8 +26,16 @@ module ``App Config tests`` =
     [<Test>] 
     member __.``getPrimitive should succeeds`` () =
       test <@ appConfig.Get<int> "processId" = Ok 123   @>
-    
-    [<Test>] 
+
+    [<Test>]
+    member __.``getUri should succeed`` () =
+      test <@ appConfig.Get<ConfigWithUri> () = Ok { Uri = Uri("https://example.com") } @>
+
+    [<Test>]
+    member __.``getUri should return error with invalid URIs`` () =
+      test <@ appConfig.Get<ConfigWithInvalidUri> () = Error(BadValue("InvalidUri", "invalid")) @>
+
+    [<Test>]
     member __.``getRecord should succeeds`` () =
       test <@ appConfig.Get<SampleConfig> () = Ok {ProcessId = 123; ProcessName = "FsConfig"}   @>
 
@@ -64,6 +73,13 @@ module ``App Config tests`` =
     member __.``getPrimitive should succeeds`` () =
       test <@ appConfig.Get<int> "processId" = Ok 123   @>
 
+    [<Test>]
+    member __.``getUri should succeed`` () =
+      test <@ appConfig.Get<ConfigWithUri> () = Ok { Uri = Uri("https://example.com") } @>
+
+    [<Test>]
+    member __.``getUri should return error with invalid URIs`` () =
+      test <@ appConfig.Get<ConfigWithInvalidUri> () = Error(BadValue("InvalidUri", "invalid")) @>
 
     [<Test>] 
     member __.``getRecord should succeeds`` () =
@@ -104,7 +120,14 @@ module ``App Config tests`` =
     [<Test>] 
     member __.``getRecord should succeeds`` () =
       test <@ appConfig.Get<SampleConfig> () = Ok {ProcessId = 123; ProcessName = "FsConfig"}   @>
-    
+
+    [<Test>]
+    member __.``getUri should succeed`` () =
+      test <@ appConfig.Get<ConfigWithUri> () = Ok { Uri = Uri("https://example.com") } @>
+
+    [<Test>]
+    member __.``getUri should return error with invalid URIs`` () =
+      test <@ appConfig.Get<ConfigWithInvalidUri> () = Error(BadValue("InvalidUri", "invalid")) @>
 
     [<Test>]
     member __.``get list of DU with custom name`` () =
