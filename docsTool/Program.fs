@@ -1,4 +1,4 @@
-open System
+﻿open System
 open Fake.IO.FileSystemOperators
 open Fake.IO
 open Fake.Core
@@ -157,9 +157,12 @@ module GenerateDocs =
             FSharp.Literate.Literate.FormatLiterateNodes(doc, OutputKind.Html, "", true, true)
 
         let format (doc: LiterateDocument) =
-
-            Formatting.format doc.MarkdownDocument true OutputKind.Html
-              + doc.FormattedTips
+            if not <| Seq.isEmpty doc.Errors
+            then
+                failwithf "error while formatting file %s. Errors are:\n%A" doc.SourceFile doc.Errors
+            else
+                Formatting.format doc.MarkdownDocument true OutputKind.Html
+                + doc.FormattedTips
 
 
 
@@ -202,7 +205,7 @@ module GenerateDocs =
                     { opts
                         with
                             OutputPath = Some cfg.PublishPath.FullName
-                            Framework = Some "netstandard2.0"
+                            Framework = Some "net6.0"
                     })
                 p
         )

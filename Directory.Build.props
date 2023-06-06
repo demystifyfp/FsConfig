@@ -8,7 +8,7 @@
         <RepositoryType>git</RepositoryType>
         <Authors>demystifyfp</Authors>
         <RepositoryUrl>https://github.com/demystifyfp/FsConfig</RepositoryUrl>
-        <Copyright>Copyright 2015 - 2021 © demystifyfp</Copyright>
+        <Copyright>Copyright 2015 - 2023 © demystifyfp</Copyright>
         <Description>F# Libary for managing configuration data from environment variables and application config in a type-safe way</Description>
         <!-- owners is not supported in MSBuild -->
     </PropertyGroup>
