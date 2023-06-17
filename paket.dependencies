@@ -55,6 +55,12 @@ group Docs
     nuget FSharp.Formatting 4.0.0-rc1
     nuget FSharp.Literate 4.0.0-rc1
     nuget Fable.React
+    # https://github.com/fsprojects/FAKE/issues/2722
+    nuget Microsoft.Build 17.3.2
+    nuget Microsoft.Build.Framework 17.3.2
+    nuget Microsoft.Build.Tasks.Core 17.3.2
+    nuget Microsoft.Build.Utilities.Core 17.3.2
+    # end - https://github.com/fsprojects/FAKE/issues/2722
 
 group Analyzers
   source https://www.nuget.org/api/v2
