@@ -1,122 +1,94 @@
 namespace FsConfig.Tests
 
 module Common =
-  open FsConfig
-  open System
-  type SampleConfig = {
-    ProcessId : int
-    ProcessName : string
-  }
+    open FsConfig
+    open System
 
-  [<Convention("MYAPP")>]
-  type CustomPrefixSampleConfig = {
-    ProcessId : int
-    ProcessName : string
-  }
+    type SampleConfig = { ProcessId: int; ProcessName: string }
 
-  [<Convention("", Separator = "-")>]
-  type CustomSeparatorSampleConfig = {
-    ProcessId : int
-    ProcessName : string
-  }
+    [<Convention("MYAPP")>]
+    type CustomPrefixSampleConfig = { ProcessId: int; ProcessName: string }
 
-  [<Convention("MYAPP", Separator = "__")>]
-  type CustomPrefixAndSeparatorSampleConfig = {
-    ProcessId : int
-    ProcessName : string
-  }
+    [<Convention("", Separator = "-")>]
+    type CustomSeparatorSampleConfig = { ProcessId: int; ProcessName: string }
 
-  [<Convention("MYENV")>]
-  type CustomListSeparatorSampleConfig = {
-    ProcessNames : string list
-    [<ListSeparator(';')>]
-    ProcessIds : uint16 list
-    [<ListSeparator('|')>]
-    PipedFlow : int list    
-  }
+    [<Convention("MYAPP", Separator = "__")>]
+    type CustomPrefixAndSeparatorSampleConfig = { ProcessId: int; ProcessName: string }
+
+    [<Convention("MYENV")>]
+    type CustomListSeparatorSampleConfig = {
+        ProcessNames: string list
+        [<ListSeparator(';')>]
+        ProcessIds: uint16 list
+        [<ListSeparator('|')>]
+        PipedFlow: int list
+    }
 
 
-  type IntListUsingPipesConfig = {
-    [<ListSeparator('|')>]
-    IntListUp : int list
-  }
+    type IntListUsingPipesConfig = {
+        [<ListSeparator('|')>]
+        IntListUp: int list
+    }
 
 
-  type NonIConvertibleConfig = {
-    DateTimeOffset : DateTimeOffset
-    TimeSpan : TimeSpan
-    Guid : Guid
-  }
+    type NonIConvertibleConfig = {
+        DateTimeOffset: DateTimeOffset
+        TimeSpan: TimeSpan
+        Guid: Guid
+    }
 
-  let expectedNonIConvertibleConfig = {
-    DateTimeOffset = DateTimeOffset.Parse "5/01/2008 14:57:32.80 -07:00"
-    TimeSpan = TimeSpan.Parse "99.23:59:59.9999999"
-    Guid = System.Guid.Parse("f36fd7ca-1005-4d72-af92-c62e63cccaaf")
-  }
+    let expectedNonIConvertibleConfig = {
+        DateTimeOffset = DateTimeOffset.Parse "5/01/2008 14:57:32.80 -07:00"
+        TimeSpan = TimeSpan.Parse "99.23:59:59.9999999"
+        Guid = System.Guid.Parse("f36fd7ca-1005-4d72-af92-c62e63cccaaf")
+    }
 
-  let lowerCaseConfigNameCanonicalizer _ (name : string) = 
-    name.ToLowerInvariant()
+    let lowerCaseConfigNameCanonicalizer _ (name: string) = name.ToLowerInvariant()
 
-  [<Flags>]
-  type Color =
-  | Red = 0
-  | Blue = 1
-  | Green = 2
-  
-  
-  [<Flags>]
-  type CaseSensitiveColor =
-  | Purple = 0
-  | purple = 1
-  | PURPLE = 2
-  | pURPLE = 3
+    [<Flags>]
+    type Color =
+        | Red = 0
+        | Blue = 1
+        | Green = 2
 
-  type DuColor =
-  | Red
-  | Blue
-  | Green
 
-  type CaseSensitiveDuColor =
-  | Purple
-  | PURPLE
+    [<Flags>]
+    type CaseSensitiveColor =
+        | Purple = 0
+        | purple = 1
+        | PURPLE = 2
+        | pURPLE = 3
 
-  type DuConfig = {
-    DuColor : DuColor
-  }
+    type DuColor =
+        | Red
+        | Blue
+        | Green
 
-  type CaseSensitiveDuConfig = {
-    CaseSensitiveDuColor : CaseSensitiveDuColor
-  }
+    type CaseSensitiveDuColor =
+        | Purple
+        | PURPLE
 
-  type DuListConfig = {
-    DuColors : DuColor list
-  }
+    type DuConfig = { DuColor: DuColor }
 
-  type OptionConfig = {
-    IntOption : int option
-  }
+    type CaseSensitiveDuConfig = {
+        CaseSensitiveDuColor: CaseSensitiveDuColor
+    }
 
-  type AwsConfig = {
-    AccessKeyId : string
-    DefaultRegion : string
-    SecretAccessKey : string
-  }
+    type DuListConfig = { DuColors: DuColor list }
 
-  type Config = {
-    MagicNumber : int
-    Aws : AwsConfig
-  }
+    type OptionConfig = { IntOption: int option }
 
-  [<Convention("MYAPP")>]
-  type ConfigWithCustomPrefix = {
-    MagicNumber : int
-    Aws : AwsConfig
-  }
+    type AwsConfig = {
+        AccessKeyId: string
+        DefaultRegion: string
+        SecretAccessKey: string
+    }
 
-  type ConfigWithUri = {
-    Uri : Uri
-  }
+    type Config = { MagicNumber: int; Aws: AwsConfig }
 
-  type ConfigWithInvalidUri = {
-    InvalidUri : Uri
-  }
+    [<Convention("MYAPP")>]
+    type ConfigWithCustomPrefix = { MagicNumber: int; Aws: AwsConfig }
+
+    type ConfigWithUri = { Uri: Uri }
+
+    type ConfigWithInvalidUri = { InvalidUri: Uri }

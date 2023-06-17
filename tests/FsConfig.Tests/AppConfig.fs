@@ -9,141 +9,210 @@ open System.IO
 open FsConfig.Tests.Common
 
 module ``App Config tests`` =
-  type DuListConfig = {
-    [<CustomName("colors")>]
-    DuColors : DuColor list
-  }
+    type DuListConfig = {
+        [<CustomName("colors")>]
+        DuColors: DuColor list
+    }
 
-  [<TestFixture>]
-  type ``JSON Configuration tests`` () =
+    [<TestFixture>]
+    type ``JSON Configuration tests``() =
 
-    let appConfig =
-      let b = new ConfigurationBuilder() 
-      b.SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("settings.json").Build()
-      |> AppConfig
+        let appConfig =
+            let b = new ConfigurationBuilder()
 
-    [<Test>] 
-    member __.``getPrimitive should succeeds`` () =
-      test <@ appConfig.Get<int> "processId" = Ok 123   @>
+            b
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("settings.json")
+                .Build()
+            |> AppConfig
 
-    [<Test>]
-    member __.``getUri should succeed`` () =
-      test <@ appConfig.Get<ConfigWithUri> () = Ok { Uri = Uri("https://example.com") } @>
+        [<Test>]
+        member __.``getPrimitive should succeeds``() =
+            test <@ appConfig.Get<int> "processId" = Ok 123 @>
 
-    [<Test>]
-    member __.``getUri should return error with invalid URIs`` () =
-      test <@ appConfig.Get<ConfigWithInvalidUri> () = Error(BadValue("InvalidUri", "invalid")) @>
+        [<Test>]
+        member __.``getUri should succeed``() =
+            test <@ appConfig.Get<ConfigWithUri>() = Ok { Uri = Uri("https://example.com") } @>
 
-    [<Test>]
-    member __.``getRecord should succeeds`` () =
-      test <@ appConfig.Get<SampleConfig> () = Ok {ProcessId = 123; ProcessName = "FsConfig"}   @>
+        [<Test>]
+        member __.``getUri should return error with invalid URIs``() =
+            test
+                <@ appConfig.Get<ConfigWithInvalidUri>() = Error(BadValue("InvalidUri", "invalid")) @>
 
-
-    [<Test>]
-    member __.``getNestedRecord should succeeds`` () =
-      let expected = 
-        {
-          Config.MagicNumber = 42
-          Aws = 
-          {
-            AccessKeyId = "Id-123"
-            DefaultRegion = "us-east-1"
-            SecretAccessKey = "secret123"
-          }
-        } |> Ok
-      test <@ appConfig.Get<Config> () = expected  @>
+        [<Test>]
+        member __.``getRecord should succeeds``() =
+            test
+                <@
+                    appConfig.Get<SampleConfig>() = Ok
+                                                        {
+                                                            ProcessId = 123
+                                                            ProcessName = "FsConfig"
+                                                        }
+                @>
 
 
-    [<Test>]
-    member __.``get list of DU with custom name`` () =
-      test <@ appConfig.Get<DuListConfig> () = Ok {DuColors = [Red;Green]}  @>
+        [<Test>]
+        member __.``getNestedRecord should succeeds``() =
+            let expected =
+                {
+                    Config.MagicNumber = 42
+                    Aws =
+                        {
+                            AccessKeyId = "Id-123"
+                            DefaultRegion = "us-east-1"
+                            SecretAccessKey = "secret123"
+                        }
+                }
+                |> Ok
+
+            test <@ appConfig.Get<Config>() = expected @>
 
 
-  [<TestFixture>]
-  type ``XML Configuration tests`` () =
-
-    let appConfig =
-      let b = new ConfigurationBuilder() 
-      b.SetBasePath(Directory.GetCurrentDirectory())
-        .AddXmlFile("settings.xml").Build()
-      |> AppConfig
-
-    [<Test>] 
-    member __.``getPrimitive should succeeds`` () =
-      test <@ appConfig.Get<int> "processId" = Ok 123   @>
-
-    [<Test>]
-    member __.``getUri should succeed`` () =
-      test <@ appConfig.Get<ConfigWithUri> () = Ok { Uri = Uri("https://example.com") } @>
-
-    [<Test>]
-    member __.``getUri should return error with invalid URIs`` () =
-      test <@ appConfig.Get<ConfigWithInvalidUri> () = Error(BadValue("InvalidUri", "invalid")) @>
-
-    [<Test>] 
-    member __.``getRecord should succeeds`` () =
-      test <@ appConfig.Get<SampleConfig> () = Ok {ProcessId = 123; ProcessName = "FsConfig"}   @>
-
-    [<Test>]
-    member __.``get list of DU with custom name`` () =
-      test <@ appConfig.Get<DuListConfig> () = Ok {DuColors = [Red;Green]}  @>
+        [<Test>]
+        member __.``get list of DU with custom name``() =
+            test
+                <@
+                    appConfig.Get<DuListConfig>() = Ok
+                                                        {
+                                                            DuColors =
+                                                                [
+                                                                    Red
+                                                                    Green
+                                                                ]
+                                                        }
+                @>
 
 
-    [<Test>]
-    member __.``getNestedRecord should succeeds`` () =
-      let expected = 
-        {
-          Config.MagicNumber = 42
-          Aws = 
-          {
-            AccessKeyId = "Id-123"
-            DefaultRegion = "us-east-1"
-            SecretAccessKey = "secret123"
-          }
-        } |> Ok
-      test <@ appConfig.Get<Config> () = expected  @>
-    
-  [<TestFixture>]
-  type ``Ini Configuration tests`` () =
+    [<TestFixture>]
+    type ``XML Configuration tests``() =
 
-    let appConfig =
-      let b = new ConfigurationBuilder() 
-      b.SetBasePath(Directory.GetCurrentDirectory())
-        .AddIniFile("settings.ini").Build()
-      |> AppConfig
+        let appConfig =
+            let b = new ConfigurationBuilder()
 
-    [<Test>] 
-    member __.``getPrimitive should succeeds`` () =
-      test <@ appConfig.Get<int> "processId" = Ok 123   @>
+            b
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddXmlFile("settings.xml")
+                .Build()
+            |> AppConfig
 
-    [<Test>] 
-    member __.``getRecord should succeeds`` () =
-      test <@ appConfig.Get<SampleConfig> () = Ok {ProcessId = 123; ProcessName = "FsConfig"}   @>
+        [<Test>]
+        member __.``getPrimitive should succeeds``() =
+            test <@ appConfig.Get<int> "processId" = Ok 123 @>
 
-    [<Test>]
-    member __.``getUri should succeed`` () =
-      test <@ appConfig.Get<ConfigWithUri> () = Ok { Uri = Uri("https://example.com") } @>
+        [<Test>]
+        member __.``getUri should succeed``() =
+            test <@ appConfig.Get<ConfigWithUri>() = Ok { Uri = Uri("https://example.com") } @>
 
-    [<Test>]
-    member __.``getUri should return error with invalid URIs`` () =
-      test <@ appConfig.Get<ConfigWithInvalidUri> () = Error(BadValue("InvalidUri", "invalid")) @>
+        [<Test>]
+        member __.``getUri should return error with invalid URIs``() =
+            test
+                <@ appConfig.Get<ConfigWithInvalidUri>() = Error(BadValue("InvalidUri", "invalid")) @>
 
-    [<Test>]
-    member __.``get list of DU with custom name`` () =
-      test <@ appConfig.Get<DuListConfig> () = Ok {DuColors = [Red;Green]}  @>
+        [<Test>]
+        member __.``getRecord should succeeds``() =
+            test
+                <@
+                    appConfig.Get<SampleConfig>() = Ok
+                                                        {
+                                                            ProcessId = 123
+                                                            ProcessName = "FsConfig"
+                                                        }
+                @>
+
+        [<Test>]
+        member __.``get list of DU with custom name``() =
+            test
+                <@
+                    appConfig.Get<DuListConfig>() = Ok
+                                                        {
+                                                            DuColors =
+                                                                [
+                                                                    Red
+                                                                    Green
+                                                                ]
+                                                        }
+                @>
 
 
-    [<Test>]
-    member __.``getNestedRecord should succeeds`` () =
-      let expected = 
-        {
-          Config.MagicNumber = 42
-          Aws = 
-          {
-            AccessKeyId = "Id-123"
-            DefaultRegion = "us-east-1"
-            SecretAccessKey = "secret123"
-          }
-        } |> Ok
-      test <@ appConfig.Get<Config> () = expected  @>
+        [<Test>]
+        member __.``getNestedRecord should succeeds``() =
+            let expected =
+                {
+                    Config.MagicNumber = 42
+                    Aws =
+                        {
+                            AccessKeyId = "Id-123"
+                            DefaultRegion = "us-east-1"
+                            SecretAccessKey = "secret123"
+                        }
+                }
+                |> Ok
+
+            test <@ appConfig.Get<Config>() = expected @>
+
+    [<TestFixture>]
+    type ``Ini Configuration tests``() =
+
+        let appConfig =
+            let b = new ConfigurationBuilder()
+
+            b
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddIniFile("settings.ini")
+                .Build()
+            |> AppConfig
+
+        [<Test>]
+        member __.``getPrimitive should succeeds``() =
+            test <@ appConfig.Get<int> "processId" = Ok 123 @>
+
+        [<Test>]
+        member __.``getRecord should succeeds``() =
+            test
+                <@
+                    appConfig.Get<SampleConfig>() = Ok
+                                                        {
+                                                            ProcessId = 123
+                                                            ProcessName = "FsConfig"
+                                                        }
+                @>
+
+        [<Test>]
+        member __.``getUri should succeed``() =
+            test <@ appConfig.Get<ConfigWithUri>() = Ok { Uri = Uri("https://example.com") } @>
+
+        [<Test>]
+        member __.``getUri should return error with invalid URIs``() =
+            test
+                <@ appConfig.Get<ConfigWithInvalidUri>() = Error(BadValue("InvalidUri", "invalid")) @>
+
+        [<Test>]
+        member __.``get list of DU with custom name``() =
+            test
+                <@
+                    appConfig.Get<DuListConfig>() = Ok
+                                                        {
+                                                            DuColors =
+                                                                [
+                                                                    Red
+                                                                    Green
+                                                                ]
+                                                        }
+                @>
+
+
+        [<Test>]
+        member __.``getNestedRecord should succeeds``() =
+            let expected =
+                {
+                    Config.MagicNumber = 42
+                    Aws =
+                        {
+                            AccessKeyId = "Id-123"
+                            DefaultRegion = "us-east-1"
+                            SecretAccessKey = "secret123"
+                        }
+                }
+                |> Ok
+
+            test <@ appConfig.Get<Config>() = expected @>

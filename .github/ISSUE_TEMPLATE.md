@@ -1,30 +1,31 @@
-### Description
+## Description
 
-Please provide a succinct description of your issue.
+Please insert a description of your problem or question.
 
-### Repro steps
+## Error messages, screenshots
 
-Please provide the steps required to reproduce the problem
+Please add any error logs or screenshots if available.
 
-1. Step A
+## Failing test, failing GitHub repo, or reproduction steps
 
-2. Step B
+Please add either a failing test, a GitHub repo of the problem or detailed reproduction steps.
 
-### Expected behavior
+## Expected Behavior
 
-Please provide a description of the behavior you expect.
+Please define what you would expect the behavior to be like.
 
-### Actual behavior
-
-Please provide a description of the actual behavior you observe. 
-
-### Known workarounds
+## Known workarounds
 
 Please provide a description of any known workarounds.
 
-### Related information 
+## Other information
 
-* Operating system
-* Branch
-* .NET Runtime, CoreCLR or Mono Version
-* Performance information, links to performance testing scripts
+* Operating System:
+    - [ ] windows [insert version here]
+    - [ ] macOs [insert version]
+    - [ ] linux [insert flavor/version here]
+* Platform
+    - [ ] dotnet core
+    - [ ] dotnet full
+    - [ ] mono
+* Branch or release version:

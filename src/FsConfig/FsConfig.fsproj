@@ -11,7 +11,7 @@
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>TRACE;DEBUG;TYPESHAPE_EXPOSE;TYPESHAPE_EMIT;TYPESHAPE_EXPR</DefineConstants>
   </PropertyGroup>
@@ -37,3 +37,4 @@
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
+ 

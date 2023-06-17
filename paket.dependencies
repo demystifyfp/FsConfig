@@ -1,13 +1,21 @@
 source https://www.nuget.org/api/v2
 source https://api.nuget.org/v3/index.json
 storage: none
-nuget FSharp.Core 5.0
-nuget Microsoft.SourceLink.GitHub 1.0.0 copy_local: true
-nuget Expecto 9.0.2
-nuget YoloDev.Expecto.TestSdk 0.12.4
-nuget Microsoft.NET.Test.Sdk 16.10.0
-nuget TypeShape 9.0.0
-nuget Microsoft.Extensions.Configuration >= 5.0.0
+nuget FSharp.Core 6.0
+nuget Microsoft.SourceLink.GitHub 1.1.0 copy_local: true
+nuget Expecto 9.0.4
+nuget YoloDev.Expecto.TestSdk 0.12.12
+nuget Microsoft.NET.Test.Sdk 17.3.0
+nuget Microsoft.Extensions.Configuration 6.0
+nuget altcover ~> 8.2.825
+nuget TypeShape
+nuget UnQuote
+nuget NUnit
+nuget NUnit3TestAdapter
+nuget FsUnit
+nuget Microsoft.Extensions.Configuration.Xml 6.0
+nuget Microsoft.Extensions.Configuration.JSON 6.0
+nuget Microsoft.Extensions.Configuration.Ini 6.0
 
 // [ FAKE GROUP ]
 group Build
@@ -24,17 +32,23 @@ group Build
     nuget Fake.Tools.Git 5.20.4
     nuget Fake.DotNet.Paket 5.20.4
     nuget Fake.Api.GitHub 5.20.4
-    nuget Fake.BuildServer.AppVeyor 5.20.4
-    nuget Fake.BuildServer.Travis 5.20.4
-    nuget Fantomas.Extras 4.5.1
+    nuget Fake.BuildServer.GitHubActions 5.20.4
     nuget Argu
+    nuget Octokit 0.48
+    # https://github.com/fsprojects/FAKE/issues/2722
+    nuget Microsoft.Build 17.3.2
+    nuget Microsoft.Build.Framework 17.3.2
+    nuget Microsoft.Build.Tasks.Core 17.3.2
+    nuget Microsoft.Build.Utilities.Core 17.3.2
+    # end - https://github.com/fsprojects/FAKE/issues/2722
 
 group Docs
     storage: none
     source https://www.nuget.org/api/v2
     source https://api.nuget.org/v3/index.json
     nuget Argu
-    nuget FSharp.Core
+    nuget FSharp.Compiler.Service 34.1.0
+    nuget FSharp.Core ~> 4.6
     nuget Fake.IO.FileSystem 5.20.4
     nuget FAKE.Core.Environment 5.20.4
     nuget Fake.DotNet.Cli 5.20.4
@@ -46,17 +60,3 @@ group Analyzers
   source https://www.nuget.org/api/v2
   source https://api.nuget.org/v3/index.json
   nuget BinaryDefense.FSharp.Analyzers.Hashing 0.2.2
-
-group Test
-  storage: none
-  source https://www.nuget.org/api/v2
-  source https://api.nuget.org/v3/index.json
-  nuget UnQuote
-  nuget NUnit
-  nuget NUnit3TestAdapter
-  nuget Microsoft.NET.Test.Sdk
-  nuget FsUnit
-  nuget Microsoft.Extensions.Configuration.Xml
-  nuget Microsoft.Extensions.Configuration.JSON
-  nuget Microsoft.Extensions.Configuration.Ini
-  nuget altcover ~> 7
