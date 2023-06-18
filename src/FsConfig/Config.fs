@@ -185,43 +185,6 @@ module internal Core =
             )
         | _ -> None
 
-    let parseFSharpOption<'T> name value (fsharpOption: IShapeFSharpOption) =
-        let wrap (p: ConfigParseResult<'a>) = unbox<ConfigParseResult<'T>> p
-
-        fsharpOption.Element.Accept
-            { new ITypeVisitor<ConfigParseResult<'T>> with
-                member __.Visit<'t>() =
-                    match value with
-                    | None ->
-                        let result: ConfigParseResult<'t option> = None |> Ok
-                        wrap result
-                    | Some v ->
-                        match getTryParseFunc<'t> fsharpOption.Element with
-                        | Some tryParseFunc ->
-                            match shapeof<'t> with
-                            | Shape.String ->
-                                if String.IsNullOrWhiteSpace v then
-                                    let result: ConfigParseResult<'t option> = None |> Ok
-                                    wrap result
-                                else
-                                    tryParseWith name v tryParseFunc
-                                    |> Result.bind (
-                                        Some
-                                        >> Ok
-                                        >> wrap
-                                    )
-                            | _ ->
-                                tryParseWith name v tryParseFunc
-                                |> Result.bind (
-                                    Some
-                                    >> Ok
-                                    >> wrap
-                                )
-                        | None ->
-                            notSupported name
-                            |> Error
-            }
-
     let parseListReducer name tryParseFunc acc element =
         acc
         |> Result.bind (fun xs ->
@@ -285,7 +248,8 @@ module internal Core =
         match targetTypeShape with
         | Shape.FSharpRecord (:? ShapeFSharpRecord<'T> as shape) ->
             parseFSharpRecord configReader fieldNameCanonicalizer (Prefix args.Name) shape
-        | Shape.FSharpOption fsharpOption -> parseFSharpOption<'T> args.Name value fsharpOption
+        | Shape.FSharpOption fsharpOption ->
+            parseFSharpOption configReader fieldNameCanonicalizer args fsharpOption
         | Shape.FSharpList fsharpList ->
             parseFSharpList<'T> args.Name value fsharpList args.ListSplitChar
         | _ ->
@@ -363,6 +327,35 @@ module internal Core =
             )
             (Ok [])
         |> Result.map (List.fold (fun acc f -> f acc) record)
+
+    and parseFSharpOption
+        (configReader: IConfigReader)
+        (fieldNameCanonicalizer: FieldNameCanonicalizer)
+        args
+        (fsharpOption: IShapeFSharpOption)
+        =
+        let wrap (p: ConfigParseResult<'a>) = unbox<ConfigParseResult<'T>> p
+
+        fsharpOption.Element.Accept
+            { new ITypeVisitor<ConfigParseResult<'T>> with
+                member __.Visit<'t>() =
+
+                    match parseInternal<'t> configReader fieldNameCanonicalizer args with
+                    | Ok (value) ->
+                        match box value with
+                        | :? string as s when String.IsNullOrWhiteSpace s ->
+                            let result: ConfigParseResult<'t option> = None |> Ok
+                            wrap result
+                        | _ ->
+                            Some(value)
+                            |> Ok
+                            |> wrap
+                    | Error (BadValue v) -> Error(BadValue v)
+                    | Error (NotFound _) ->
+                        let result: ConfigParseResult<'t option> = None |> Ok
+                        wrap result
+                    | Error (NotSupported x) -> Error(NotSupported x)
+            }
 
 [<AutoOpen>]
 module Config =

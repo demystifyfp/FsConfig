@@ -1,13 +1,27 @@
 {
-  "processId" : "123",
-  "processName" : "FsConfig",
-  "magicNumber" : 42,
-  "aws" : {
-    "accessKeyId" : "Id-123",
-    "defaultRegion" : "us-east-1",
-    "secretAccessKey" : "secret123"
-  },
-  "colors" : "Red,Green",
-  "uri": "https://example.com",
-  "invalidUri": "invalid"
+    "processId": "123",
+    "processName": "FsConfig",
+    "magicNumber": 42,
+    "aws": {
+        "accessKeyId": "Id-123",
+        "defaultRegion": "us-east-1",
+        "secretAccessKey": "secret123"
+    },
+    "colors": "Red,Green",
+    "uri": "https://example.com",
+    "invalidUri": "invalid",
+    "optionalSubsectionNone": {},
+    "optionalSubsectionSome": {
+        "apiKey": "abc-def",
+        "value": 1
+    },
+    "listOfRecords": [
+        {
+            "optionalSubsectionNone": {},
+            "optionalSubsectionSome": {
+                "apiKey": "abc-def",
+                "value": 1
+            }
+        }
+    ]
 }

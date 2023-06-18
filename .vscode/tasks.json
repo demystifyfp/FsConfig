@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "msbuild",
+            "problemMatcher": [
+                "$msCompile"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "label": "build",
+            "detail": "Build the FsConfig.Tests.fsproj project using dotnet build"
+        }
+    ]
+}
