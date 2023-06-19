@@ -14,14 +14,5 @@
     "optionalSubsectionSome": {
         "apiKey": "abc-def",
         "value": 1
-    },
-    "listOfRecords": [
-        {
-            "optionalSubsectionNone": {},
-            "optionalSubsectionSome": {
-                "apiKey": "abc-def",
-                "value": 1
-            }
-        }
-    ]
+    }
 }
