@@ -67,6 +67,18 @@ module ``App Config tests`` =
 
             test <@ appConfig.Get<Config>() = expected @>
 
+        [<Test>]
+        member __.``getOptionalRecord should succeed``() =
+            let expected =
+                {
+                    optionalSubsectionNone = None
+                    optionalSubsectionSome = Some({ apiKey = "abc-def"; value = 1 })
+
+                }
+
+                |> Ok
+
+            test <@ appConfig.Get<ConfigWithOptionalSubsection>() = expected @>
 
         [<Test>]
         member __.``get list of DU with custom name``() =

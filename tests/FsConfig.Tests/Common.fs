@@ -92,3 +92,10 @@ module Common =
     type ConfigWithUri = { Uri: Uri }
 
     type ConfigWithInvalidUri = { InvalidUri: Uri }
+
+    type ConfigWithOptionalSubsection = {
+        optionalSubsectionNone: Subsection option
+        optionalSubsectionSome: Subsection option
+    }
+
+    and Subsection = { apiKey: string; value: int }
